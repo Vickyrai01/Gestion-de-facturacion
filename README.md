@@ -1,2 +1,2 @@
-# Sistema-de-gesti-n-de-facturas
+# Gestion-de-facturacion
 Sistema de gestión de facturas en dos tecnologias distintas para migrar

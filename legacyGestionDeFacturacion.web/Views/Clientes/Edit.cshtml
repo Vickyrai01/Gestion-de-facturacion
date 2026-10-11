@@ -1,0 +1,18 @@
+@model legacyGestionDeFacturacion.web.Models.Cliente
+@{
+    ViewBag.Title = "Editar cliente";
+}
+
+<h1>Editar cliente</h1>
+<p>Estado actual: <strong>@(Model.Activo ? "Activo" : "Inactivo")</strong>.</p>
+@using (Html.BeginForm("Edit", "Clientes", new { id = Model.Id }, FormMethod.Post, new { @class = "formulario-cliente" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("_Formulario", Model)
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-outline-secondary" })
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

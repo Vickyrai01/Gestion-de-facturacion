@@ -1,0 +1,42 @@
+@model IEnumerable<legacyGestionDeFacturacion.web.Models.Cliente>
+@{
+    ViewBag.Title = "Clientes";
+}
+
+<h1>Clientes</h1>
+<p>Administra los datos de tus clientes y consulta su estado.</p>
+<p>@Html.ActionLink("Crear cliente", "Create", null, new { @class = "btn btn-primary" })</p>
+
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <caption>Clientes registrados, activos e inactivos</caption>
+        <thead>
+            <tr>
+                <th scope="col">Nombre completo</th>
+                <th scope="col">Documento</th>
+                <th scope="col">Email</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in Model)
+            {
+                <tr>
+                    <td>@cliente.Nombre @cliente.Apellido</td>
+                    <td>@cliente.Documento</td>
+                    <td>@cliente.Email</td>
+                    <td><span class="badge @(cliente.Activo ? "bg-success" : "bg-secondary")">@(cliente.Activo ? "Activo" : "Inactivo")</span></td>
+                    <td class="acciones-cliente">
+                        @Html.ActionLink("Detalle", "Details", new { id = cliente.Id }, new { @class = "btn btn-outline-secondary btn-sm" })
+                        @Html.ActionLink("Editar", "Edit", new { id = cliente.Id }, new { @class = "btn btn-outline-primary btn-sm" })
+                        @if (cliente.Activo)
+                        {
+                            @Html.Partial("_Desactivar", cliente)
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

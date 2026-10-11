@@ -1,0 +1,18 @@
+@model legacyGestionDeFacturacion.web.Models.Cliente
+@{
+    ViewBag.Title = "Crear cliente";
+}
+
+<h1>Crear cliente</h1>
+<p>Completá los campos obligatorios. El cliente se creará activo.</p>
+@using (Html.BeginForm("Create", "Clientes", FormMethod.Post, new { @class = "formulario-cliente" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("_Formulario", Model)
+    <button type="submit" class="btn btn-primary">Crear cliente</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-outline-secondary" })
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

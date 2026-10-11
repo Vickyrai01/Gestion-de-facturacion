@@ -1,0 +1,26 @@
+@model legacyGestionDeFacturacion.web.Models.Cliente
+@{
+    ViewBag.Title = "Detalle del cliente";
+}
+
+<h1>Detalle del cliente</h1>
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Nombre)</dd>
+    <dt class="col-sm-3">Apellido</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Apellido)</dd>
+    <dt class="col-sm-3">Documento</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Documento)</dd>
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+    <dt class="col-sm-3">Estado</dt>
+    <dd class="col-sm-9">@(Model.Activo ? "Activo" : "Inactivo")</dd>
+</dl>
+<div class="acciones-cliente">
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+    @if (Model.Activo)
+    {
+        @Html.Partial("_Desactivar", Model)
+    }
+    @Html.ActionLink("Volver al listado", "Index", null, new { @class = "btn btn-outline-secondary" })
+</div>

@@ -18,3 +18,24 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.formulario-cliente {
+    max-width: 480px;
+}
+
+.formulario-cliente input {
+    max-width: 100%;
+}
+
+.acciones-cliente {
+    white-space: nowrap;
+}
+
+.field-validation-valid,
+.validation-summary-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border-color: #dc3545;
+}

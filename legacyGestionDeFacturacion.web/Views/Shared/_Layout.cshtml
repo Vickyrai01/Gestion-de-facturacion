@@ -20,7 +20,19 @@
                 <ul class="navbar-nav flex-grow-1">
                     <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Clientes", "Index", "Clientes", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Productos", "Index", "Productos", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Facturas", "Index", "Facturas", new { area = "" }, new { @class = "nav-link" })</li>
+                    @if (User.IsInRole("ADMIN")) { <li>@Html.ActionLink("Reportes", "Reportes", "Facturas", null, new { @class = "nav-link" })</li> }
                 </ul>
+                @if (Request.IsAuthenticated)
+                {
+                    <span class="navbar-text me-2">@User.Identity.Name (@(User.IsInRole("ADMIN") ? "ADMIN" : "OPERADOR"))</span>
+                    using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { @class = "d-inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-light btn-sm">Salir</button>
+                    }
+                }
             </div>
         </div>
     </nav>

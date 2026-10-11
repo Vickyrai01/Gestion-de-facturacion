@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
-namespace legacyGestionDeFacturacion.web.Models
+namespace FacturacionLegacy.Datos.Entidades
 {
     public class Cliente
     {
@@ -24,5 +25,7 @@ namespace legacyGestionDeFacturacion.web.Models
         public string Email { get; set; }
 
         public bool Activo { get; set; }
+
+        public virtual ICollection<Factura> Facturas { get; set; }
     }
 }

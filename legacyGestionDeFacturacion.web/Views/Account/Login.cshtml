@@ -1,0 +1,12 @@
+@model legacyGestionDeFacturacion.web.Models.LoginModel
+@{ ViewBag.Title = "Iniciar sesión"; }
+<h1>Iniciar sesión</h1>
+@using (Html.BeginForm("Login", "Account", new { returnUrl = (string)ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "formulario-cliente" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "Revisá el inicio de sesión.", new { @class = "text-danger", role = "alert" })
+    <div class="mb-3">@Html.LabelFor(m => m.NombreUsuario, new { @class = "form-label" }) @Html.TextBoxFor(m => m.NombreUsuario, new { @class = "form-control", autocomplete = "username" })</div>
+    <div class="mb-3">@Html.LabelFor(m => m.Password, new { @class = "form-label" }) @Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "current-password" })</div>
+    <button type="submit" class="btn btn-primary">Ingresar</button>
+}
+@section scripts { @Scripts.Render("~/bundles/jqueryval") }

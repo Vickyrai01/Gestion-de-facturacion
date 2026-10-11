@@ -1,11 +1,11 @@
-@model IEnumerable<legacyGestionDeFacturacion.web.Models.Cliente>
+@model IEnumerable<FacturacionLegacy.Datos.Entidades.Cliente>
 @{
     ViewBag.Title = "Clientes";
 }
 
 <h1>Clientes</h1>
 <p>Administra los datos de tus clientes y consulta su estado.</p>
-<p>@Html.ActionLink("Crear cliente", "Create", null, new { @class = "btn btn-primary" })</p>
+@if (User.IsInRole("ADMIN")) { <p>@Html.ActionLink("Crear cliente", "Create", null, new { @class = "btn btn-primary" })</p> }
 
 <div class="table-responsive">
     <table class="table table-striped align-middle">
@@ -29,8 +29,8 @@
                     <td><span class="badge @(cliente.Activo ? "bg-success" : "bg-secondary")">@(cliente.Activo ? "Activo" : "Inactivo")</span></td>
                     <td class="acciones-cliente">
                         @Html.ActionLink("Detalle", "Details", new { id = cliente.Id }, new { @class = "btn btn-outline-secondary btn-sm" })
-                        @Html.ActionLink("Editar", "Edit", new { id = cliente.Id }, new { @class = "btn btn-outline-primary btn-sm" })
-                        @if (cliente.Activo)
+                        @if (User.IsInRole("ADMIN")) { @Html.ActionLink("Editar", "Edit", new { id = cliente.Id }, new { @class = "btn btn-outline-primary btn-sm" }) }
+                        @if (cliente.Activo && User.IsInRole("ADMIN"))
                         {
                             @Html.Partial("_Desactivar", cliente)
                         }

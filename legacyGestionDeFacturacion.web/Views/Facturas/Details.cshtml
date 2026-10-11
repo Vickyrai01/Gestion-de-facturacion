@@ -1,0 +1,30 @@
+@model FacturacionLegacy.Datos.Entidades.Factura
+@using FacturacionLegacy.Datos.Entidades
+@{ ViewBag.Title = "Factura " + Model.Numero; }
+<h1>Factura @Model.Numero</h1>
+<p>Cliente: @Model.Cliente.Nombre @Model.Cliente.Apellido · Documento: @Model.Cliente.Documento</p>
+<p>Fecha UTC: @Model.FechaEmision.ToString("yyyy-MM-dd HH:mm") · Estado: <strong>@Model.Estado</strong></p>
+<div class="table-responsive"><table class="table table-striped">
+    <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio histórico</th><th>Subtotal</th></tr></thead>
+    <tbody>@foreach (var detalle in Model.Detalles) {
+        <tr><td>@detalle.Producto.Codigo — @detalle.Producto.Nombre</td><td>@detalle.Cantidad</td><td>@detalle.PrecioUnitario.ToString("N2")</td><td>@detalle.Subtotal.ToString("N2")</td></tr>
+    }</tbody>
+</table></div>
+<dl class="row">
+    <dt class="col-sm-3">Subtotal</dt><dd class="col-sm-9">@Model.Subtotal.ToString("N2")</dd>
+    <dt class="col-sm-3">Impuestos didácticos</dt><dd class="col-sm-9">@Model.Impuestos.ToString("N2")</dd>
+    <dt class="col-sm-3">Total</dt><dd class="col-sm-9"><strong>@Model.Total.ToString("N2")</strong></dd>
+</dl>
+@if (Model.Estado == EstadosFactura.Pendiente && User.IsInRole("ADMIN"))
+{
+    using (Html.BeginForm("Emitir", "Facturas", new { id = Model.Id }, FormMethod.Post, new { @class = "d-inline" })) {
+        @Html.AntiForgeryToken()<button type="submit" class="btn btn-primary">Emitir</button>
+    }
+}
+@if (Model.Estado != EstadosFactura.Anulada && User.IsInRole("ADMIN"))
+{
+    using (Html.BeginForm("Anular", "Facturas", new { id = Model.Id }, FormMethod.Post, new { @class = "d-inline" })) {
+        @Html.AntiForgeryToken()<button type="submit" class="btn btn-outline-danger">Anular</button>
+    }
+}
+@Html.ActionLink("Volver al listado", "Index", null, new { @class = "btn btn-outline-secondary" })

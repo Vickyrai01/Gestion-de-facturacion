@@ -1,0 +1,23 @@
+@model IEnumerable<FacturacionLegacy.Datos.Entidades.Producto>
+@{ ViewBag.Title = "Productos"; }
+<h1>Productos</h1>
+@if (User.IsInRole("ADMIN")) { <p>@Html.ActionLink("Crear producto", "Create", null, new { @class = "btn btn-primary" })</p> }
+<div class="table-responsive">
+<table class="table table-striped align-middle">
+    <thead><tr><th>Código</th><th>Nombre</th><th>Precio unitario</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody>
+    @foreach (var producto in Model)
+    {
+        <tr>
+            <td>@producto.Codigo</td><td>@producto.Nombre</td><td>@producto.PrecioUnitario.ToString("N2")</td><td>@producto.Stock</td>
+            <td>@(producto.Activo ? "Activo" : "Inactivo")</td>
+            <td class="acciones-cliente">
+                @Html.ActionLink("Detalle", "Details", new { id = producto.Id }, new { @class = "btn btn-outline-secondary btn-sm" })
+                @if (User.IsInRole("ADMIN")) { @Html.ActionLink("Editar", "Edit", new { id = producto.Id }, new { @class = "btn btn-outline-primary btn-sm" }) }
+                @if (producto.Activo && User.IsInRole("ADMIN")) { @Html.Partial("_Desactivar", producto) }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+</div>

@@ -1,0 +1,26 @@
+@model legacyGestionDeFacturacion.web.Models.FacturaCrearModel
+@{ ViewBag.Title = "Crear factura"; }
+<h1>Crear factura</h1>
+<p>El servidor calculará los importes con los precios vigentes. Tasa didáctica: @((Model.TasaImpuestos * 100).ToString("0.##"))%. El stock es informativo.</p>
+@using (Html.BeginForm("Create", "Facturas", FormMethod.Post, new { id = "form-factura" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "Revisá la factura.", new { @class = "text-danger", role = "alert" })
+    <div class="mb-3"><label for="ClienteId" class="form-label">Cliente activo</label>@Html.DropDownListFor(m => m.ClienteId, Model.Clientes, "Seleccionar cliente", new { @class = "form-select" })</div>
+    <table class="table" id="detalles"><thead><tr><th>Producto activo (precio vigente)</th><th>Cantidad</th><th>Acción</th></tr></thead><tbody>
+    @for (int i = 0; i < Model.Detalles.Count; i++) {
+        <tr><td>@Html.DropDownListFor(m => m.Detalles[i].ProductoId, Model.Productos, "Seleccionar producto", new { @class = "form-select", aria_label = "Producto" })</td>
+            <td>@Html.TextBoxFor(m => m.Detalles[i].Cantidad, new { @class = "form-control", type = "number", min = "1", max = "1000000", step = "1", aria_label = "Cantidad" })</td>
+            <td><button type="button" class="btn btn-outline-danger quitar-detalle">Quitar</button></td></tr>
+    }
+    </tbody></table>
+    <p><button type="button" id="agregar-detalle" class="btn btn-outline-primary">Agregar producto</button></p>
+    <button type="submit" class="btn btn-primary">Crear y calcular factura</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-outline-secondary" })
+}
+<template id="plantilla-detalle">
+    <tr><td>@Html.DropDownList("producto-nuevo", Model.Productos, "Seleccionar producto", new { @class = "form-select", aria_label = "Producto" })</td>
+    <td><input class="form-control" type="number" value="1" min="1" max="1000000" step="1" aria-label="Cantidad" /></td>
+    <td><button type="button" class="btn btn-outline-danger quitar-detalle">Quitar</button></td></tr>
+</template>
+@section scripts { @Scripts.Render("~/bundles/jqueryval") <script src="@Url.Content("~/Scripts/facturas.js")"></script> }

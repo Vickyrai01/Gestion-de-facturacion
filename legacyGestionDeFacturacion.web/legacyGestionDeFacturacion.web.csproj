@@ -122,8 +122,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
-    <Compile Include="Models\Cliente.cs" />
-    <Compile Include="Models\ClientesEnMemoria.cs" />
+    <Compile Include="Controllers\ProductosController.cs" />
+    <Compile Include="Controllers\FacturasController.cs" /><Compile Include="Models\FacturaCrearModel.cs" />
+    <Compile Include="Controllers\AccountController.cs" /><Compile Include="Models\LoginModel.cs" /><Compile Include="Seguridad\IntentosLogin.cs" />
+    <Compile Include="Seguridad\PermisoAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -186,6 +188,13 @@
     <Content Include="Views\Clientes\Edit.cshtml" />
     <Content Include="Views\Clientes\_Formulario.cshtml" />
     <Content Include="Views\Clientes\_Desactivar.cshtml" />
+    <Content Include="Views\Productos\Index.cshtml" /><Content Include="Views\Productos\Details.cshtml" />
+    <Content Include="Views\Productos\Create.cshtml" /><Content Include="Views\Productos\Edit.cshtml" />
+    <Content Include="Views\Productos\_Formulario.cshtml" /><Content Include="Views\Productos\_Desactivar.cshtml" />
+    <Content Include="Views\Facturas\Index.cshtml" /><Content Include="Views\Facturas\Details.cshtml" />
+    <Content Include="Views\Facturas\Create.cshtml" /><Content Include="Views\Facturas\Reportes.cshtml" />
+    <Content Include="Scripts\facturas.js" />
+    <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -222,6 +231,11 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="EntityFramework"><HintPath>packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath></Reference>
+    <Reference Include="EntityFramework.SqlServer"><HintPath>packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath></Reference>
+    <ProjectReference Include="..\FacturacionLegacy.Datos\FacturacionLegacy.Datos.csproj"><Project>{4622DB93-A19B-4613-8832-F790BE8A3731}</Project><Name>FacturacionLegacy.Datos</Name></ProjectReference>
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">

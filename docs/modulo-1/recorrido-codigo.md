@@ -1,6 +1,6 @@
 # Recorrido del código durante la capacitación
 
-Todos los enlaces apuntan a archivos reales. Abrir el proyecto, poner un breakpoint en `ClientesController.Index` y ejecutar con IIS Express.
+Los archivos y enlaces de este recorrido corresponden a la rama `modulo-1-gap-tecnologico`. En la rama del Módulo 2, Cliente se trasladó a `FacturacionLegacy.Datos/Entidades/Cliente.cs` y el almacenamiento en memoria se retiró; usar [la guía del Módulo 2](../modulo-2/README.md) para esa versión. Abrir el proyecto del Módulo 1, poner un breakpoint en `ClientesController.Index` y ejecutar con IIS Express.
 
 ## Una petición GET a /Clientes
 

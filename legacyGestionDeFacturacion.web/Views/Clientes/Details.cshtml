@@ -1,4 +1,4 @@
-@model legacyGestionDeFacturacion.web.Models.Cliente
+@model FacturacionLegacy.Datos.Entidades.Cliente
 @{
     ViewBag.Title = "Detalle del cliente";
 }
@@ -17,8 +17,8 @@
     <dd class="col-sm-9">@(Model.Activo ? "Activo" : "Inactivo")</dd>
 </dl>
 <div class="acciones-cliente">
-    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
-    @if (Model.Activo)
+    @if (User.IsInRole("ADMIN")) { @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) }
+    @if (Model.Activo && User.IsInRole("ADMIN"))
     {
         @Html.Partial("_Desactivar", Model)
     }

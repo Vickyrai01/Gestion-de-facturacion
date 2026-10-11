@@ -1,0 +1,13 @@
+@model FacturacionLegacy.Datos.Entidades.Producto
+@{ ViewBag.Title = "Detalle del producto"; }
+<h1>@Model.Nombre</h1>
+<dl class="row">
+    <dt class="col-sm-3">Código</dt><dd class="col-sm-9">@Model.Codigo</dd>
+    <dt class="col-sm-3">Descripción</dt><dd class="col-sm-9">@Model.Descripcion</dd>
+    <dt class="col-sm-3">Precio unitario</dt><dd class="col-sm-9">@Model.PrecioUnitario.ToString("N2")</dd>
+    <dt class="col-sm-3">Stock informativo</dt><dd class="col-sm-9">@Model.Stock</dd>
+    <dt class="col-sm-3">Estado</dt><dd class="col-sm-9">@(Model.Activo ? "Activo" : "Inactivo")</dd>
+</dl>
+@if (User.IsInRole("ADMIN")) { @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) }
+@if (Model.Activo && User.IsInRole("ADMIN")) { @Html.Partial("_Desactivar", Model) }
+@Html.ActionLink("Volver al listado", "Index", null, new { @class = "btn btn-outline-secondary" })

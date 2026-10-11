@@ -1,0 +1,16 @@
+@model IEnumerable<FacturacionLegacy.Datos.Entidades.Factura>
+@{ ViewBag.Title = "Facturas"; }
+<h1>Facturas</h1>
+<p>@Html.ActionLink("Crear factura", "Create", null, new { @class = "btn btn-primary" })</p>
+@using (Html.BeginForm("Index", "Facturas", FormMethod.Get, new { @class = "row g-2 mb-3" }))
+{
+    <div class="col-md-5"><label for="clienteId" class="form-label">Cliente</label>@Html.DropDownList("clienteId", (SelectList)ViewBag.Clientes, "Todos los clientes", new { @class = "form-select" })</div>
+    <div class="col-md-4"><label for="estado" class="form-label">Estado</label>@Html.DropDownList("estado", (SelectList)ViewBag.Estados, "Todos los estados", new { @class = "form-select" })</div>
+    <div class="col-md-3 align-self-end"><button class="btn btn-outline-primary" type="submit">Filtrar</button> @Html.ActionLink("Limpiar", "Index")</div>
+}
+<div class="table-responsive"><table class="table table-striped">
+    <thead><tr><th>Número</th><th>Cliente</th><th>Fecha UTC</th><th>Estado</th><th>Total</th><th>Acciones</th></tr></thead>
+    <tbody>@foreach (var factura in Model) {
+        <tr><td>@factura.Numero</td><td>@factura.Cliente.Nombre @factura.Cliente.Apellido</td><td>@factura.FechaEmision.ToString("yyyy-MM-dd HH:mm")</td><td>@factura.Estado</td><td>@factura.Total.ToString("N2")</td><td>@Html.ActionLink("Detalle", "Details", new { id = factura.Id })</td></tr>
+    }</tbody>
+</table></div>

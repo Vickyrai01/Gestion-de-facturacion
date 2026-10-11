@@ -1,0 +1,11 @@
+@model FacturacionLegacy.Datos.Entidades.Producto
+@{ ViewBag.Title = "Crear producto"; }
+<h1>Crear producto</h1>
+@using (Html.BeginForm("Create", "Productos", FormMethod.Post, new { @class = "formulario-cliente" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("_Formulario", Model)
+    <button type="submit" class="btn btn-primary">Crear producto</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-outline-secondary" })
+}
+@section scripts { @Scripts.Render("~/bundles/jqueryval") }

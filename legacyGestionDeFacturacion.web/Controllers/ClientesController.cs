@@ -1,20 +1,26 @@
 using System.Web.Mvc;
-using legacyGestionDeFacturacion.web.Models;
+using System.Linq;
+using System.Data.Entity;
+using FacturacionLegacy.Datos;
+using FacturacionLegacy.Datos.Entidades;
+using legacyGestionDeFacturacion.web.Seguridad;
 
 namespace legacyGestionDeFacturacion.web.Controllers
 {
+    [Permiso(Roles = RolesUsuario.Admin + "," + RolesUsuario.Operador)]
     public class ClientesController : Controller
     {
+        private readonly FacturacionDbContext db = new FacturacionDbContext();
         [HttpGet]
         public ActionResult Index()
         {
-            return View(ClientesEnMemoria.Listar());
+            return View(db.Clientes.AsNoTracking().OrderBy(c => c.Id).ToList());
         }
 
         [HttpGet]
         public ActionResult Details(int? id)
         {
-            var cliente = id.HasValue ? ClientesEnMemoria.Obtener(id.Value) : null;
+            var cliente = id.HasValue ? db.Clientes.Find(id.Value) : null;
             if (cliente == null)
             {
                 return HttpNotFound();
@@ -24,6 +30,7 @@ namespace legacyGestionDeFacturacion.web.Controllers
         }
 
         [HttpGet]
+        [Permiso(Roles = RolesUsuario.Admin)]
         public ActionResult Create()
         {
             return View(new Cliente());
@@ -31,6 +38,7 @@ namespace legacyGestionDeFacturacion.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso(Roles = RolesUsuario.Admin)]
         public ActionResult Create([Bind(Include = "Nombre,Apellido,Documento,Email")] Cliente cliente)
         {
             if (!ModelState.IsValid)
@@ -38,15 +46,18 @@ namespace legacyGestionDeFacturacion.web.Controllers
                 return View(cliente);
             }
 
-            int id = ClientesEnMemoria.Crear(cliente);
+            cliente.Activo = true;
+            db.Clientes.Add(cliente);
+            db.SaveChanges();
             TempData["Mensaje"] = "Cliente creado correctamente.";
-            return RedirectToAction("Details", new { id = id });
+            return RedirectToAction("Details", new { id = cliente.Id });
         }
 
         [HttpGet]
+        [Permiso(Roles = RolesUsuario.Admin)]
         public ActionResult Edit(int? id)
         {
-            var cliente = id.HasValue ? ClientesEnMemoria.Obtener(id.Value) : null;
+            var cliente = id.HasValue ? db.Clientes.Find(id.Value) : null;
             if (cliente == null)
             {
                 return HttpNotFound();
@@ -57,9 +68,10 @@ namespace legacyGestionDeFacturacion.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso(Roles = RolesUsuario.Admin)]
         public ActionResult Edit(int? id, [Bind(Include = "Nombre,Apellido,Documento,Email")] Cliente cliente)
         {
-            var actual = id.HasValue ? ClientesEnMemoria.Obtener(id.Value) : null;
+            var actual = id.HasValue ? db.Clientes.Find(id.Value) : null;
             if (actual == null)
             {
                 return HttpNotFound();
@@ -72,10 +84,11 @@ namespace legacyGestionDeFacturacion.web.Controllers
                 return View(cliente);
             }
 
-            if (!ClientesEnMemoria.Editar(actual.Id, cliente))
-            {
-                return HttpNotFound();
-            }
+            actual.Nombre = cliente.Nombre;
+            actual.Apellido = cliente.Apellido;
+            actual.Documento = cliente.Documento;
+            actual.Email = cliente.Email;
+            db.SaveChanges();
 
             TempData["Mensaje"] = "Cliente actualizado correctamente.";
             return RedirectToAction("Details", new { id = actual.Id });
@@ -84,15 +97,25 @@ namespace legacyGestionDeFacturacion.web.Controllers
         // Acepta POST tradicional y PATCH real o mediante HttpMethodOverride.
         [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Patch)]
         [ValidateAntiForgeryToken]
+        [Permiso(Roles = RolesUsuario.Admin)]
         public ActionResult Desactivar(int? id)
         {
-            if (!id.HasValue || !ClientesEnMemoria.Desactivar(id.Value))
+            var cliente = id.HasValue ? db.Clientes.Find(id.Value) : null;
+            if (cliente == null)
             {
                 return HttpNotFound();
             }
 
+            cliente.Activo = false;
+            db.SaveChanges();
             TempData["Mensaje"] = "Cliente desactivado correctamente.";
             return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

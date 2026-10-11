@@ -1,0 +1,7 @@
+@model IEnumerable<legacyGestionDeFacturacion.web.Controllers.ReporteEstado>
+@{ ViewBag.Title = "Reportes"; }
+<h1>Resumen por estado</h1>
+<p>Importes didácticos agrupados por estado. Las facturas anuladas se muestran separadamente.</p>
+<table class="table"><thead><tr><th>Estado</th><th>Cantidad</th><th>Total</th></tr></thead><tbody>
+@foreach (var fila in Model) { <tr><td>@fila.Estado</td><td>@fila.Cantidad</td><td>@fila.Total.ToString("N2")</td></tr> }
+</tbody></table>

@@ -6,3 +6,9 @@
 # Generated build output
 [Bb]in/
 [Oo]bj/
+
+# Restored packages and local tools (existing tracked packages stay tracked)
+packages/
+tools/nuget.exe
+tools/.local/
+*.log

@@ -1,0 +1,7 @@
+@model FacturacionLegacy.Datos.Entidades.Producto
+@Html.ValidationSummary(false, "Revisá los datos ingresados.", new { @class = "text-danger", role = "alert" })
+<div class="mb-3">@Html.LabelFor(m => m.Codigo, new { @class = "form-label" }) @Html.TextBoxFor(m => m.Codigo, new { @class = "form-control", maxlength = "30" }) @Html.ValidationMessageFor(m => m.Codigo, "", new { @class = "text-danger" })</div>
+<div class="mb-3">@Html.LabelFor(m => m.Nombre, new { @class = "form-label" }) @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", maxlength = "100" }) @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })</div>
+<div class="mb-3">@Html.LabelFor(m => m.Descripcion, new { @class = "form-label" }) @Html.TextAreaFor(m => m.Descripcion, new { @class = "form-control", maxlength = "500" }) @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })</div>
+<div class="mb-3">@Html.LabelFor(m => m.PrecioUnitario, new { @class = "form-label" }) @Html.TextBoxFor(m => m.PrecioUnitario, "{0:0.00}", new { @class = "form-control", inputmode = "decimal" }) @Html.ValidationMessageFor(m => m.PrecioUnitario, "", new { @class = "text-danger" }) <small>Usá punto decimal, por ejemplo 125.50. El precio se redondea a dos decimales.</small></div>
+<div class="mb-3">@Html.LabelFor(m => m.Stock, new { @class = "form-label" }) @Html.TextBoxFor(m => m.Stock, new { @class = "form-control", type = "number", min = "0", step = "1" }) @Html.ValidationMessageFor(m => m.Stock, "", new { @class = "text-danger" })</div>

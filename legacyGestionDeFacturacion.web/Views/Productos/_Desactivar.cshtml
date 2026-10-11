@@ -1,0 +1,6 @@
+@model FacturacionLegacy.Datos.Entidades.Producto
+@using (Html.BeginForm("Desactivar", "Productos", new { id = Model.Id }, FormMethod.Post, new { @class = "d-inline" }))
+{
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-outline-danger btn-sm">Desactivar</button>
+}

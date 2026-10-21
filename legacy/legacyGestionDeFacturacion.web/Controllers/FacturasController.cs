@@ -1,32 +1,49 @@
 using System;
-using System.Configuration;
-using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using FacturacionLegacy.Datos;
 using FacturacionLegacy.Datos.Entidades;
 using legacyGestionDeFacturacion.web.Models;
 using legacyGestionDeFacturacion.web.Seguridad;
+using FacturacionLegacy.Datos.Facturacion;
+using legacyGestionDeFacturacion.web.Composicion;
 
 namespace legacyGestionDeFacturacion.web.Controllers
 {
     [Permiso(Roles = RolesUsuario.Admin + "," + RolesUsuario.Operador)]
     public class FacturasController : Controller
     {
-        private readonly FacturacionDbContext db = new FacturacionDbContext();
+        private readonly IServicioFacturacion servicio;
+        private readonly IDisposable recursos;
+
+        public FacturasController() : this(new FacturacionWeb()) { }
+        private FacturasController(FacturacionWeb composicion)
+        {
+            servicio = composicion.Servicio;
+            recursos = composicion;
+        }
+        public FacturasController(IServicioFacturacion servicio)
+        {
+            if (servicio == null) throw new ArgumentNullException("servicio");
+            this.servicio = servicio;
+        }
         [HttpGet]
         public ActionResult Index(int? clienteId, string estado)
         {
-            if (!string.IsNullOrEmpty(estado) && !EstadosFactura.Todos.Contains(estado)) return new HttpStatusCodeResult(400, "Estado inválido");
-            ViewBag.Clientes = new SelectList(db.Clientes.AsNoTracking().OrderBy(c => c.Apellido).ToList().Select(c => new { c.Id, Nombre = c.Nombre + " " + c.Apellido }), "Id", "Nombre", clienteId);
+            System.Collections.Generic.IList<FacturaResumenDto> facturas;
+            try
+            {
+                facturas = servicio.Consultar(clienteId, estado);
+            }
+            catch (ArgumentException) { return new HttpStatusCodeResult(400, "Estado inválido"); }
+            ViewBag.Clientes = new SelectList(servicio.Clientes(false).Select(c => new { c.Id, Nombre = c.Nombre + " " + c.Apellido }), "Id", "Nombre", clienteId);
             ViewBag.Estados = new SelectList(EstadosFactura.Todos, estado);
-            return View(FacturacionOperaciones.Consultar(db, clienteId, estado).ToList());
+            return View(facturas);
         }
         [HttpGet]
         public ActionResult Details(int? id)
         {
-            var factura = id.HasValue ? FacturacionOperaciones.Obtener(db, id.Value) : null;
+            var factura = id.HasValue ? servicio.Obtener(id.Value) : null;
             if (factura == null) return HttpNotFound();
             return View(factura);
         }
@@ -45,7 +62,7 @@ namespace legacyGestionDeFacturacion.web.Controllers
             {
                 try
                 {
-                    int id = FacturacionOperaciones.Crear(db, model.ClienteId, model.Detalles, ObtenerTasa());
+                    int id = servicio.Crear(new CrearFacturaRequest { ClienteId = model.ClienteId, Detalles = model.Detalles });
                     TempData["Mensaje"] = "Factura creada en estado PENDIENTE.";
                     return RedirectToAction("Details", new { id = id });
                 }
@@ -59,8 +76,10 @@ namespace legacyGestionDeFacturacion.web.Controllers
         [Permiso(Roles = RolesUsuario.Admin)]
         public ActionResult Emitir(int? id)
         {
-            if (!id.HasValue || !db.Facturas.Any(f => f.Id == id.Value)) return HttpNotFound();
-            if (!FacturacionOperaciones.Emitir(db, id.Value)) return new HttpStatusCodeResult(409, "Solo se puede emitir una factura pendiente.");
+            if (!id.HasValue) return HttpNotFound();
+            var resultado = servicio.Emitir(id.Value);
+            if (resultado == ResultadoCambioEstado.NoExiste) return HttpNotFound();
+            if (resultado == ResultadoCambioEstado.Conflicto) return new HttpStatusCodeResult(409, "Solo se puede emitir una factura pendiente.");
             TempData["Mensaje"] = "Factura emitida.";
             return RedirectToAction("Details", new { id = id.Value });
         }
@@ -68,8 +87,10 @@ namespace legacyGestionDeFacturacion.web.Controllers
         [Permiso(Roles = RolesUsuario.Admin)]
         public ActionResult Anular(int? id)
         {
-            if (!id.HasValue || !db.Facturas.Any(f => f.Id == id.Value)) return HttpNotFound();
-            if (!FacturacionOperaciones.Anular(db, id.Value)) return new HttpStatusCodeResult(409, "La factura ya está anulada.");
+            if (!id.HasValue) return HttpNotFound();
+            var resultado = servicio.Anular(id.Value);
+            if (resultado == ResultadoCambioEstado.NoExiste) return HttpNotFound();
+            if (resultado == ResultadoCambioEstado.Conflicto) return new HttpStatusCodeResult(409, "La factura ya está anulada.");
             TempData["Mensaje"] = "Factura anulada; se conserva su historial.";
             return RedirectToAction("Details", new { id = id.Value });
         }
@@ -77,31 +98,18 @@ namespace legacyGestionDeFacturacion.web.Controllers
         [Permiso(Roles = RolesUsuario.Admin)]
         public ActionResult Reportes()
         {
-            return View(db.Facturas.AsNoTracking().GroupBy(f => f.Estado).Select(g => new ReporteEstado { Estado = g.Key, Cantidad = g.Count(), Total = g.Sum(f => f.Total) }).ToList());
-        }
-        private static decimal ObtenerTasa()
-        {
-            decimal tasa;
-            if (!decimal.TryParse(ConfigurationManager.AppSettings["TasaImpuestos"], NumberStyles.Number, CultureInfo.InvariantCulture, out tasa) || tasa < 0 || tasa > 1)
-                throw new ConfigurationErrorsException("TasaImpuestos debe ser un decimal entre 0 y 1.");
-            return tasa;
+            return View(servicio.Reportes());
         }
         private void PrepararFormulario(FacturaCrearModel model)
         {
-            model.Clientes = db.Clientes.AsNoTracking().Where(c => c.Activo).OrderBy(c => c.Apellido).ToList().Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Nombre + " " + c.Apellido });
-            model.Productos = db.Productos.AsNoTracking().Where(p => p.Activo).OrderBy(p => p.Codigo).ToList().Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Codigo + " — " + p.Nombre + " (" + p.PrecioUnitario.ToString("N2") + ")" });
-            model.TasaImpuestos = ObtenerTasa();
+            model.Clientes = servicio.Clientes(true).Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Nombre + " " + c.Apellido });
+            model.Productos = servicio.ProductosActivos().Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Codigo + " — " + p.Nombre + " (" + p.PrecioUnitario.ToString("N2") + ")" });
+            model.TasaImpuestos = servicio.TasaImpuestos;
         }
         protected override void Dispose(bool disposing)
         {
-            if (disposing) db.Dispose();
+            if (disposing && recursos != null) recursos.Dispose();
             base.Dispose(disposing);
         }
-    }
-    public class ReporteEstado
-    {
-        public string Estado { get; set; }
-        public int Cantidad { get; set; }
-        public decimal Total { get; set; }
     }
 }

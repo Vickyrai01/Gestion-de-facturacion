@@ -1,40 +1,35 @@
-# Inyección de dependencias
+# Inyección de dependencias integrada
 
-Hoy los controllers instancian `new FacturacionDbContext()` y llaman a `FacturacionOperaciones`, una clase estática. No hay contenedor nativo de ASP.NET Core dentro de MVC 5. El Módulo 3 está separando esas responsabilidades: aquí no se crean repositorios globales alternativos.
+El Módulo 3 ya separa `FacturasController` de EF: recibe `IServicioFacturacion`, cuyo `ServicioFacturacion` recibe `IRepositorioFacturas`, `IConsultaClientes` e `IConsultaProductos`. `legacy/legacyGestionDeFacturacion.web/Composicion/FacturacionWeb.cs` construye los adaptadores con un contexto por petición y lo libera al disponer el controller. ClientesController y ProductosController conservan acceso directo a EF6.
 
-El ejemplo ejecutable está en `legacy/FacturacionLegacy.WindowsService/ConsultaPendientes.cs` y `ResumenPendientes.cs`:
+Se reutiliza ese patrón de composición manual en el Windows Service, sin contenedor adicional:
 
-- `IConsultaPendientes` declara `int Contar()`.
-- `ConsultaPendientesEf` es la dependencia concreta: crea y libera un contexto por ejecución y delega en `FacturacionOperaciones.ContarPendientes`.
-- `ResumenPendientes(IConsultaPendientes consulta, Serilog.ILogger log)` recibe dependencias por constructor. Coordina ejecución, errores y registro sin construir EF dentro de su operación.
-- El constructor sin argumentos compone las implementaciones manualmente para conservar las llamadas de `Program` y `FacturacionService`. Solo dispone el logger que él mismo creó. El llamador debe disponer un logger inyectado.
+- `Program.MostrarProductosAsync` crea un contexto, recibe la consulta a través de `IConsultaProductos` y usa `ConsultaProductosEf6`, con el mismo `ProductoConsultaDto` del Módulo 3. Mantiene el contexto vivo hasta finalizar el await.
+- `ComposicionProcesos.ContarPendientes` crea un contexto por ciclo y usa `IRepositorioFacturas` / `RepositorioFacturasEf6`. No captura un DbContext compartido entre ticks.
+- `ResumenPendientes(Func<int> contarPendientes, Serilog.ILogger log)` recibe la operación y el logger por constructor. La función permite componer el ciclo de vida del repositorio fuera del timer sin otra interfaz equivalente.
+- Su constructor por defecto selecciona esa composición y posee el logger que creó. Un logger inyectado sigue siendo propiedad del llamador.
 
-DI es pasar la dependencia desde afuera; no requiere un contenedor. Esto permite sustituir SQL por una implementación controlada durante una clase o prueba. Ejemplo compatible con Framework, para una sesión C# o un arnés de pruebas referenciando el ensamblado y Serilog (no es otro proyecto agregado):
+Se eliminaron `IConsultaPendientes`, `ConsultaPendientesEf`, `ConsultasProductosAsync` y su DTO local tras comprobar que sus consumidores estaban dentro del propio servicio. La consulta SQL de conteo tiene ahora una sola implementación en el repositorio; `FacturacionOperaciones.ContarPendientes` conserva la firma anterior delegando en él para compatibilidad.
+
+DI es pasar la dependencia desde afuera; no requiere un contenedor. Ejemplo compatible con Framework, para una sesión C# o un arnés referenciando el ejecutable y Serilog:
 
 ```csharp
-class PendientesDemo : FacturacionLegacy.WindowsService.IConsultaPendientes
-{
-    public int Contar() { return 3; }
-}
-// Dentro del método de demostración:
 using (var log = new Serilog.LoggerConfiguration().CreateLogger())
-using (var proceso = new FacturacionLegacy.WindowsService.ResumenPendientes(new PendientesDemo(), log))
+using (var proceso = new FacturacionLegacy.WindowsService.ResumenPendientes(() => 3, log))
 {
     bool correcto = proceso.EjecutarUnaVez(); // true, sin conectar a SQL
 }
 ```
 
-Para observar propiedades, crear el logger con el sink File configurado como en `RegistroProcesamiento`. Para enseñar error controlado, reemplazar el cuerpo por `throw new InvalidOperationException("demo");`: resultado false y `TipoError`, sin almacenar el mensaje.
+Con un sink File o en memoria se pueden observar las propiedades. Para error controlado usar `() => { throw new InvalidOperationException("demo"); }`: devuelve false y registra TipoError sin el mensaje. El arnés `legacy/tools/ValidarModulo3.ps1` incorpora estas verificaciones y las de consultas async, además de los dobles del Módulo 3 que ejercitan sus interfaces. Las pruebas están preparadas, pendientes de ejecución en Windows.
 
 ## Contenedor nativo en .NET 10
 
-Material educativo exclusivo para el futuro proyecto independiente; no se compila ni se instala en legacy. El host de ASP.NET Core integra registro, resolución y disposición de servicios. `AddTransient` crea por resolución; `AddScoped`, por scope (normalmente solicitud HTTP); `AddSingleton`, una instancia para el contenedor. Los contextos de datos suelen ser scoped. MVC 5 dispone de `DependencyResolver`, pero no de la integración del Generic Host ni de estos registros de manera nativa.
+Material educativo exclusivo para el futuro proyecto independiente; no se compila ni se instala en legacy. El host de ASP.NET Core integra registro, resolución y disposición de servicios. `AddTransient` crea por resolución; `AddScoped`, por scope (normalmente solicitud HTTP); `AddSingleton`, una instancia para el contenedor. Los contextos suelen ser scoped. MVC 5 dispone de DependencyResolver, pero esta aplicación usa composición manual; no incorpora el Generic Host ni los registros nativos de ASP.NET Core.
 
 ```csharp
-// Esquema conceptual: tipos a definir/reconciliar en Módulo 3.
-builder.Services.AddScoped<IConsultaProductos, ConsultaProductos>();
+// Boceto educativo .NET 10: usar los adaptadores del futuro proyecto moderno.
+builder.Services.AddScoped<IConsultaProductos, ConsultaProductosModerna>();
 ```
 
-El host resuelve parámetros de handlers y constructores y suministra `ILogger<T>`. Un singleton no debe capturar el contexto scoped. En un job hospedado hay que crear un scope por ciclo. Ver [DI en .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection/overview).
-
-La integración final debe sustituir `IConsultaPendientes` por el contrato acordado del Módulo 3 y mover la composición al borde de la aplicación. Evitar dos interfaces equivalentes y mantener la propiedad/disposición del contexto y del logger explícita.
+`ConsultaProductosModerna` no existe en legacy. El host moderno resolverá parámetros de handlers/constructores y suministrará `ILogger<T>`. Un singleton no debe capturar un contexto scoped; en un job hospedado se crea un scope por ciclo. Ver [DI en .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection/overview).

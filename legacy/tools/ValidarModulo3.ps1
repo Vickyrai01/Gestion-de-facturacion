@@ -13,10 +13,14 @@ New-Item -ItemType Directory -Path $testDir | Out-Null
 try {
     $webBin = Join-Path $legacyRoot 'legacyGestionDeFacturacion.web/bin'
     Get-ChildItem -LiteralPath $webBin -Filter '*.dll' -File | Copy-Item -Destination $testDir
+    $serviceBin = Join-Path $legacyRoot 'FacturacionLegacy.WindowsService/bin/Debug'
+    foreach ($assembly in @('FacturacionLegacy.WindowsService.exe', 'Serilog.dll', 'Serilog.Sinks.File.dll')) {
+        Copy-Item -LiteralPath (Join-Path $serviceBin $assembly) -Destination $testDir
+    }
     $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
     if (-not (Test-Path -LiteralPath $compiler)) { $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework/v4.0.30319/csc.exe' }
     $exe = Join-Path $testDir 'PruebasArquitectura.exe'
-    & $compiler /nologo /codepage:65001 /target:exe "/out:$exe" "/reference:$(Join-Path $testDir 'FacturacionLegacy.Datos.dll')" "/reference:$(Join-Path $testDir 'legacyGestionDeFacturacion.web.dll')" "/reference:$(Join-Path $testDir 'System.Web.Mvc.dll')" /reference:System.Web.dll /reference:System.Core.dll /reference:System.ComponentModel.DataAnnotations.dll (Join-Path $PSScriptRoot 'pruebas-modulo-3/PruebasArquitectura.cs')
+    & $compiler /nologo /codepage:65001 /target:exe "/out:$exe" "/reference:$(Join-Path $testDir 'FacturacionLegacy.Datos.dll')" "/reference:$(Join-Path $testDir 'legacyGestionDeFacturacion.web.dll')" "/reference:$(Join-Path $testDir 'System.Web.Mvc.dll')" "/reference:$(Join-Path $testDir 'FacturacionLegacy.WindowsService.exe')" "/reference:$(Join-Path $testDir 'Serilog.dll')" "/reference:$(Join-Path $testDir 'EntityFramework.dll')" /reference:System.Data.dll /reference:System.Web.dll /reference:System.Core.dll /reference:System.ComponentModel.DataAnnotations.dll (Join-Path $PSScriptRoot 'pruebas-modulo-3/PruebasArquitectura.cs') (Join-Path $PSScriptRoot 'pruebas-modulo-3/PruebasIntegracionModulo4.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Falló la compilación de las pruebas de arquitectura.' }
     & $exe
     if ($LASTEXITCODE -ne 0) { throw 'Fallaron las pruebas de arquitectura.' }

@@ -29,3 +29,7 @@ La composición usa constructores normales y una función que lee la tasa cuando
 `FacturacionOperaciones.Crear` delega al servicio nuevo. Consultar, Obtener, Emitir y Anular delegan en infraestructura; ContarPendientes conserva su consulta sencilla. Sus firmas públicas se mantienen para que WCF, Windows Service y llamadas del Módulo 2 continúen funcionando sin cambios.
 
 Consultar/Obtener de esa fachada todavía entregan IQueryable/entidades. Es una concesión explícita de compatibilidad; el contrato nuevo no adopta esa fuga de persistencia. Antes de retirar la fachada habría que localizar y adaptar a todos los consumidores, una decisión separada que se coordinará con la desarrolladora del Módulo 4.
+
+## Extensiones de la integración con Módulo 4
+
+`IConsultaProductos` incorpora `Task<List<ProductoConsultaDto>> ListarAsync(CancellationToken)` (activos e inactivos, orden Codigo/Id, máximo 20) y `Task<ProductoConsultaDto> ObtenerAsync(int, CancellationToken)` (null si falta). Los implementa ConsultaProductosEf6, conservando ListarActivos/Obtener(int[]) síncronos y reutilizando la proyección. `IRepositorioFacturas.ContarPendientes()` concentra el conteo usado por la fachada y el Windows Service. Actualizar también implementaciones externas de estos contratos. Contexto y logger se poseen en la composición del anfitrión, no en el dominio.

@@ -50,6 +50,10 @@ namespace FacturacionLegacy.Datos.Facturacion.Infraestructura
                 Detalles = factura.Detalles.Select(d => new FacturaLineaDto { ProductoId = d.ProductoId, ProductoCodigo = d.Producto.Codigo, ProductoNombre = d.Producto.Nombre, Cantidad = d.Cantidad, PrecioUnitario = d.PrecioUnitario, Subtotal = d.Subtotal }).ToList()
             };
         }
+        public int ContarPendientes()
+        {
+            return db.Facturas.Count(f => f.Estado == EstadosFactura.Pendiente);
+        }
         public bool Existe(int id) { return db.Facturas.Any(f => f.Id == id); }
         public bool Emitir(int id)
         {

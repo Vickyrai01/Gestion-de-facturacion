@@ -34,3 +34,7 @@ La solución compiló en Debug y Release con `MvcBuildViews=true`; ambas configu
 ## Límites de la evidencia
 
 No se realizó revisión visual/ejecución de JavaScript en navegador, instalación del servicio en SCM, despliegue de producción ni validación del PR del Módulo 4. No se construyó ningún proyecto .NET 10. Las pruebas de reglas no sustituyen pruebas de integración con EF6, permisos y los anfitriones existentes.
+
+## Validación después de integrar Módulo 4
+
+La evidencia anterior corresponde al refactor original. En la rama acumulativa se ampliaron los contratos IConsultaProductos/IRepositorioFacturas y sus dobles. El mismo `legacy/tools/ValidarModulo3.ps1` ahora compila también PruebasIntegracionModulo4.cs y referencia el ejecutable del servicio y Serilog. Añade pruebas de lecturas async con proveedor EF6 en memoria, cancelación previa, filtros síncronos preservados y logs/errores del resumen sin SQL. No se ejecutó ese arnés actualizado en macOS por falta de .NET Framework/MSBuild/PowerShell; tampoco se ejecutó SQL, MVC, WCF ni el servicio. Repetir en Windows la compilación, ambos validadores y las demostraciones según [Módulo 4](../../../docs/modulo-4/README.md).

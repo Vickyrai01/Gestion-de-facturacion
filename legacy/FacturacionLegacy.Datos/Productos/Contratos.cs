@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FacturacionLegacy.Datos.Productos
 {
@@ -15,5 +17,8 @@ namespace FacturacionLegacy.Datos.Productos
     {
         IList<ProductoConsultaDto> ListarActivos();
         IList<ProductoConsultaDto> Obtener(int[] ids);
+        // Lecturas de la demo del Módulo 4: incluyen activos e inactivos.
+        Task<List<ProductoConsultaDto>> ListarAsync(CancellationToken cancellationToken);
+        Task<ProductoConsultaDto> ObtenerAsync(int id, CancellationToken cancellationToken);
     }
 }

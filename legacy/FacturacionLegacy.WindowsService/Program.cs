@@ -2,6 +2,8 @@ using System;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
+using FacturacionLegacy.Datos;
+using FacturacionLegacy.Datos.Productos;
 
 namespace FacturacionLegacy.WindowsService
 {
@@ -56,19 +58,24 @@ namespace FacturacionLegacy.WindowsService
                 Console.CancelKeyPress += manejador;
                 try
                 {
-                    var consultas = new ConsultasProductosAsync();
-                    if (args.Length == 2)
+                    // Composición del anfitrión: el adaptador recibe el contexto y no lo posee.
+                    using (var db = new FacturacionDbContext())
                     {
-                        var producto = await consultas.ObtenerAsync(id, cancelar.Token);
-                        if (producto == null) { Console.WriteLine("Producto inexistente."); return 1; }
-                        Console.WriteLine("Producto {0}: {1}, precio {2:N2}", producto.Id, producto.Codigo, producto.PrecioUnitario);
-                    }
-                    else
-                    {
-                        var productos = await consultas.ListarAsync(cancelar.Token);
-                        foreach (var producto in productos)
+                        db.Database.CommandTimeout = 30;
+                        IConsultaProductos consultas = new ConsultaProductosEf6(db);
+                        if (args.Length == 2)
+                        {
+                            var producto = await consultas.ObtenerAsync(id, cancelar.Token);
+                            if (producto == null) { Console.WriteLine("Producto inexistente."); return 1; }
                             Console.WriteLine("Producto {0}: {1}, precio {2:N2}", producto.Id, producto.Codigo, producto.PrecioUnitario);
-                        Console.WriteLine("Productos consultados: {0} (máximo 20).", productos.Count);
+                        }
+                        else
+                        {
+                            var productos = await consultas.ListarAsync(cancelar.Token);
+                            foreach (var producto in productos)
+                                Console.WriteLine("Producto {0}: {1}, precio {2:N2}", producto.Id, producto.Codigo, producto.PrecioUnitario);
+                            Console.WriteLine("Productos consultados: {0} (máximo 20).", productos.Count);
+                        }
                     }
                     return 0;
                 }

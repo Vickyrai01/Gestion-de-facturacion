@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using FacturacionLegacy.Datos;
 using FacturacionLegacy.Datos.Clientes;
@@ -42,6 +44,7 @@ internal static class PruebasArquitectura
             ProbarDominio();
             ProbarServicio();
             ProbarController();
+            PruebasIntegracionModulo4.Ejecutar(Comprobar);
             Console.WriteLine("TOTAL: " + verificaciones + " verificaciones de arquitectura correctas, sin SQL Server.");
             return 0;
         }
@@ -181,6 +184,7 @@ internal static class PruebasArquitectura
         }
         public IList<FacturaResumenDto> Consultar(int? clienteId, string estado) { return new List<FacturaResumenDto>(); }
         public FacturaDetalleDto Obtener(int id) { return HayFactura ? new FacturaDetalleDto { Id = id, Detalles = new List<FacturaLineaDto>() } : null; }
+        public int ContarPendientes() { return HayFactura ? 1 : 0; }
         public bool Existe(int id) { return HayFactura; }
         public bool Emitir(int id) { return PermitirCambio; }
         public bool Anular(int id) { return PermitirCambio; }
@@ -210,6 +214,16 @@ internal static class PruebasArquitectura
             new ProductoConsultaDto { Id = 2, PrecioUnitario = 100m, Activo = true }
         };
         public ProductosDoble(List<string> pasos) { this.pasos = pasos; }
+        public Task<List<ProductoConsultaDto>> ListarAsync(CancellationToken ct)
+        {
+            ct.ThrowIfCancellationRequested();
+            return Task.FromResult(Valores.OrderBy(p => p.Codigo).ThenBy(p => p.Id).Take(20).ToList());
+        }
+        public Task<ProductoConsultaDto> ObtenerAsync(int id, CancellationToken ct)
+        {
+            ct.ThrowIfCancellationRequested();
+            return Task.FromResult(Valores.FirstOrDefault(p => p.Id == id));
+        }
         public IList<ProductoConsultaDto> ListarActivos() { return Valores.Where(p => p.Activo).ToList(); }
         public IList<ProductoConsultaDto> Obtener(int[] ids) { pasos.Add("productos"); return Valores.Where(p => ids.Contains(p.Id)).ToList(); }
     }

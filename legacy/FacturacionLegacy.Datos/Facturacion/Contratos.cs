@@ -64,6 +64,7 @@ namespace FacturacionLegacy.Datos.Facturacion
         int Guardar(FacturaEnPreparacion factura);
         IList<FacturaResumenDto> Consultar(int? clienteId, string estado);
         FacturaDetalleDto Obtener(int id);
+        int ContarPendientes();
         bool Existe(int id);
         bool Emitir(int id);
         bool Anular(int id);

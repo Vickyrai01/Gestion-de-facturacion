@@ -38,7 +38,7 @@ namespace FacturacionLegacy.Datos
         }
         public static int ContarPendientes(FacturacionDbContext db)
         {
-            return db.Facturas.Count(f => f.Estado == EstadosFactura.Pendiente);
+            return new RepositorioFacturasEf6(db).ContarPendientes();
         }
         public static bool Emitir(FacturacionDbContext db, int id)
         {

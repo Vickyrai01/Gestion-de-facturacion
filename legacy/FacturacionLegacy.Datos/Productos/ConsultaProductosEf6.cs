@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FacturacionLegacy.Datos.Productos
 {
@@ -10,15 +13,28 @@ namespace FacturacionLegacy.Datos.Productos
         public ConsultaProductosEf6(FacturacionDbContext db) { this.db = db; }
         public IList<ProductoConsultaDto> ListarActivos()
         {
-            return Proyectar(db.Productos.AsNoTracking().Where(p => p.Activo).OrderBy(p => p.Codigo));
+            return Proyectar(db.Productos.AsNoTracking().Where(p => p.Activo).OrderBy(p => p.Codigo)).ToList();
         }
         public IList<ProductoConsultaDto> Obtener(int[] ids)
         {
-            return Proyectar(db.Productos.AsNoTracking().Where(p => ids.Contains(p.Id)));
+            return Proyectar(db.Productos.AsNoTracking().Where(p => ids.Contains(p.Id))).ToList();
         }
-        private static IList<ProductoConsultaDto> Proyectar(IQueryable<Entidades.Producto> productos)
+        public async Task<List<ProductoConsultaDto>> ListarAsync(CancellationToken cancellationToken)
         {
-            return productos.Select(p => new ProductoConsultaDto { Id = p.Id, Codigo = p.Codigo, Nombre = p.Nombre, PrecioUnitario = p.PrecioUnitario, Activo = p.Activo }).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
+            return await Proyectar(db.Productos.AsNoTracking()).OrderBy(p => p.Codigo).ThenBy(p => p.Id)
+                .Take(20).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+        public async Task<ProductoConsultaDto> ObtenerAsync(int id, CancellationToken cancellationToken)
+        {
+            if (id <= 0) throw new ArgumentOutOfRangeException("id");
+            cancellationToken.ThrowIfCancellationRequested();
+            return await Proyectar(db.Productos.AsNoTracking())
+                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken).ConfigureAwait(false);
+        }
+        private static IQueryable<ProductoConsultaDto> Proyectar(IQueryable<Entidades.Producto> productos)
+        {
+            return productos.Select(p => new ProductoConsultaDto { Id = p.Id, Codigo = p.Codigo, Nombre = p.Nombre, PrecioUnitario = p.PrecioUnitario, Activo = p.Activo });
         }
     }
 }

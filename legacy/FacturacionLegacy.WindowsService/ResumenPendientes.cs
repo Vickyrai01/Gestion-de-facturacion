@@ -7,7 +7,7 @@ namespace FacturacionLegacy.WindowsService
 {
     public sealed class ResumenPendientes : IDisposable
     {
-        private readonly IConsultaPendientes consulta;
+        private readonly Func<int> contarPendientes;
         private readonly ILogger log;
         private readonly IDisposable registroPropio;
         private readonly object ciclo = new object();
@@ -16,17 +16,17 @@ namespace FacturacionLegacy.WindowsService
         private bool detenido;
 
         // Composición manual compatible con MVC 5 / .NET Framework, sin contenedor global.
-        public ResumenPendientes() : this(new ConsultaPendientesEf(), RegistroProcesamiento.Crear())
+        public ResumenPendientes() : this(ComposicionProcesos.ContarPendientes, RegistroProcesamiento.Crear())
         {
             registroPropio = (IDisposable)log;
         }
 
         // Quien inyecta el logger conserva su propiedad y debe disponerlo.
-        public ResumenPendientes(IConsultaPendientes consulta, ILogger log)
+        public ResumenPendientes(Func<int> contarPendientes, ILogger log)
         {
-            if (consulta == null) throw new ArgumentNullException("consulta");
+            if (contarPendientes == null) throw new ArgumentNullException("contarPendientes");
             if (log == null) throw new ArgumentNullException("log");
-            this.consulta = consulta;
+            this.contarPendientes = contarPendientes;
             this.log = log;
         }
 
@@ -42,7 +42,7 @@ namespace FacturacionLegacy.WindowsService
             try
             {
                 log.Information("Inicio de procesamiento de facturas pendientes");
-                int cantidad = consulta.Contar();
+                int cantidad = contarPendientes();
                 log.Information("Se encontraron {CantidadFacturas} facturas pendientes", cantidad);
                 if (Environment.UserInteractive) Console.WriteLine("Facturas pendientes: " + cantidad);
                 log.Information("Procesamiento finalizado en {DuracionMs} ms", inicio.ElapsedMilliseconds);

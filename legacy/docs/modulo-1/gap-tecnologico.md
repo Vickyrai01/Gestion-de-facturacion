@@ -1,6 +1,6 @@
 # Gap tecnológico: documentación conceptual
 
-Este documento prepara el análisis de las clases 1 y 2. No se realizó una migración: el código de esta rama sigue siendo .NET Framework 4.8 con MVC 5. El sistema .NET 10 se construirá en un proyecto separado.
+Este documento prepara el análisis de las clases 1 y 2. El sistema legacy utiliza .NET Framework 4.8 con MVC 5. El sistema .NET 10 se construirá en un proyecto separado.
 
 ## Runtime y plataformas
 

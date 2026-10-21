@@ -43,4 +43,4 @@ Para ese ejemplo, LocalService necesita autorización SQL y permisos sobre logs.
 
 El Worker Service de .NET moderno usa Generic Host y suele implementar `BackgroundService`. El host coordina arranque, parada y un CancellationToken; sus configuraciones y logging tienen otras APIs. Un Worker puede también alojarse como servicio Windows, pero no utiliza este `ServiceBase` del mismo modo. Ver [Worker Services](https://learn.microsoft.com/en-us/dotnet/core/extensions/workers).
 
-En el proyecto paralelo se migrará el ciclo de vida de la tarea, la consulta, configuración y logs. Debe conservarse la ausencia de cambios automáticos de estado, evitar solapamiento y comprobar la cancelación. Esta rama no incorpora Worker Services ni BackgroundService.
+En el proyecto paralelo se migrará el ciclo de vida de la tarea, la consulta, configuración y logs. Debe conservarse la ausencia de cambios automáticos de estado, evitar solapamiento y comprobar la cancelación. Worker Services y BackgroundService se estudian para la implementación .NET 10.

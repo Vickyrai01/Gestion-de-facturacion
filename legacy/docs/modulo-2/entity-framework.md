@@ -43,4 +43,4 @@ La alternativa reproducible sin PMC es ejecutar `FacturacionLegacy.Tools.exe mig
 
 EF Core tiene otra implementación y APIs; no se reemplaza EF6 cambiando solo el paquete. Sus migraciones no comparten directamente el historial de EF6. La [guía de portabilidad](https://learn.microsoft.com/en-us/ef/efcore-and-ef6/porting/) también aclara que EF6 puede usarse en .NET moderno: aquí no se afirma una incompatibilidad absoluta de EF6 con .NET 10.
 
-Los alumnos deberán revisar mapeos, precisión, traducción de LINQ, carga de relaciones, transacciones, secuencia e índices, permisos SQL y estrategia de esquema/historial. Comparar los importes y consultas antes/después. No se agregaron paquetes EF Core ni un contexto moderno en esta rama.
+Los alumnos deberán revisar mapeos, precisión, traducción de LINQ, carga de relaciones, transacciones, secuencia e índices, permisos SQL y estrategia de esquema/historial. Comparar los importes y consultas antes/después. EF Core y su contexto corresponden al proyecto .NET 10 independiente.

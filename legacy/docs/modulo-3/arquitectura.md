@@ -61,6 +61,6 @@ Para profundizar la modularización, una evolución posterior podría asignar co
 
 ClientesController, ProductosController, AccountController y Global.asax conservan acceso directo a EF6. Los DTOs SOAP y la configuración de sus anfitriones se conservan. La fachada todavía ofrece IQueryable y entidades para compatibilidad, por lo que esos consumidores siguen relacionados con EF6; la nueva interfaz de facturación no expone esos tipos. Son límites visibles del refactor, no una arquitectura limpia completa.
 
-## Integración acumulativa en Módulo 4
+## Aplicación en el Módulo 4
 
-Después del merge `71d866e`, `IConsultaProductos` incorpora ListarAsync/ObtenerAsync usando el mismo ProductoConsultaDto y adaptador EF6; los métodos síncronos y la creación permanecen iguales. `IRepositorioFacturas` incorpora ContarPendientes; la fachada conserva su firma delegando en el repositorio. El Windows Service compone esa operación por ciclo y mantiene timer/logging. Detalles y validación pendiente: [integración Módulo 4](../../../docs/modulo-4/integracion-modulo-3.md). No se introducen contenedores ni se cambian las reglas de dominio.
+En el Módulo 4, `IConsultaProductos` incorpora ListarAsync/ObtenerAsync usando el mismo ProductoConsultaDto y adaptador EF6; los métodos síncronos y la creación permanecen iguales. `IRepositorioFacturas` incorpora ContarPendientes; la fachada conserva su firma delegando en el repositorio. El Windows Service compone esa operación por ciclo y mantiene timer/logging. Recorrido y ejercicios: [arquitectura aplicada en Módulo 4](../../../docs/modulo-4/integracion-modulo-3.md). No se introducen contenedores ni se cambian las reglas de dominio.

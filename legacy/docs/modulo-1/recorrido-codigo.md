@@ -1,6 +1,6 @@
 # Recorrido del código durante la capacitación
 
-Los archivos y enlaces de este recorrido corresponden a la rama `modulo-1-gap-tecnologico`. En la rama del Módulo 2, Cliente se trasladó a `FacturacionLegacy.Datos/Entidades/Cliente.cs` y el almacenamiento en memoria se retiró; usar [la guía del Módulo 2](../modulo-2/README.md) para esa versión. Abrir el proyecto del Módulo 1, poner un breakpoint en `ClientesController.Index` y ejecutar con IIS Express.
+Este recorrido describe el ejemplo inicial con almacenamiento en memoria. En la aplicación actual, Cliente está en `FacturacionLegacy.Datos/Entidades/Cliente.cs` y la persistencia utiliza EF6; consultar [la guía del Módulo 2](../modulo-2/README.md) para ejecutarla. Comparar el recorrido inicial con una petición a `ClientesController.Index` mediante un breakpoint en IIS Express.
 
 ## Una petición GET a /Clientes
 

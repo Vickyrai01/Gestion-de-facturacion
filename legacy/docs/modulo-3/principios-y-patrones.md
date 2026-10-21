@@ -35,4 +35,4 @@ Tampoco se agregan microservicios, CQRS formal, MediatR, event sourcing, buses, 
 
 En `modern/`, durante el curso, se podrán reproducir primero los contratos y las pruebas de reglas. Después habrá que adaptar MVC, las consultas de EF, la transacción, secuencia y composición y verificar precios/estados/permisos. No copiar referencias a System.Web ni asumir que DbContext de EF6 y EF Core son intercambiables.
 
-El caso de uso no obtiene IConfiguration ni HttpContext: recibe sus dependencias y una tasa mediante composición. Esa decisión facilita cambiar el anfitrión. Sin embargo, conservar un contrato C# no demuestra por sí solo compatibilidad de runtime, comportamiento SQL o cookies. El proyecto moderno seguirá siendo independiente; esta rama no lo modifica.
+El caso de uso no obtiene IConfiguration ni HttpContext: recibe sus dependencias y una tasa mediante composición. Esa decisión facilita cambiar el anfitrión. Sin embargo, conservar un contrato C# no demuestra por sí solo compatibilidad de runtime, comportamiento SQL o cookies. La versión moderna se desarrollará en un proyecto independiente.

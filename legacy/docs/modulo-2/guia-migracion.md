@@ -1,6 +1,6 @@
 # Guía conceptual para las clases 3, 4 y 5
 
-El repositorio es la referencia legacy. Los alumnos crearán otro proyecto .NET 10 en `modern/`, manteniendo esta rama disponible para comparar resultados. No hay código moderno implementado aquí. Todas las rutas de código citadas a continuación son relativas a `legacy/`. Los documentos del Módulo 1 describen su versión previa; para ejecutar esta rama usar el README del Módulo 2.
+El repositorio es la referencia legacy. Los alumnos crearán otro proyecto .NET 10 en `modern/`, manteniendo la aplicación legacy disponible para comparar resultados. No hay código moderno implementado aquí. Todas las rutas de código citadas a continuación son relativas a `legacy/`. Los documentos del Módulo 1 describen su versión previa; para ejecutar la aplicación legacy usar el README del Módulo 2.
 
 ## Clase 3: MVC y persistencia
 

@@ -1,6 +1,6 @@
 # Puntos de migración para el proyecto paralelo
 
-Inventario conceptual del Módulo 1. Las alternativas son para el futuro sistema .NET 10; ninguna fue implementada en esta rama. La dificultad es una estimación para este ejemplo pequeño: baja supone adaptación local, media exige cambios coordinados y alta afecta el pipeline o varias dependencias.
+Inventario conceptual del Módulo 1. Las alternativas son para el futuro sistema .NET 10; se presentan como material educativo. La dificultad es una estimación para este ejemplo pequeño: baja supone adaptación local, media exige cambios coordinados y alta afecta el pipeline o varias dependencias.
 
 | Elemento | Situación actual y archivos | Motivo de revisión | Alternativa habitual en .NET 10 | Dificultad estimada |
 | --- | --- | --- | --- | --- |

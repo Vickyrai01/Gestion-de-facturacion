@@ -32,4 +32,4 @@ Los controllers aplican roles y los botones siguen esa misma intención. Ocultar
 
 Para el proyecto nuevo, ASP.NET Core Identity ofrece gestión de usuarios y funcionalidades de cuentas sobre otro stack. OAuth delega autorización; para identidad federada suele intervenir OpenID Connect. Identity y OAuth no son nombres alternativos para la cookie Forms. Ver [introducción a ASP.NET Core Identity](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-10.0).
 
-Los alumnos deberán definir cómo migrar usuarios/hashes, emitir nuevas cookies o tokens y preservar permisos, errores de login, HTTPS y antiforgery. Las cookies Forms no se reutilizan automáticamente en el proyecto paralelo. No se implementó Identity, OAuth ni un proveedor externo en esta rama.
+Los alumnos deberán definir cómo migrar usuarios/hashes, emitir nuevas cookies o tokens y preservar permisos, errores de login, HTTPS y antiforgery. Las cookies Forms no se reutilizan automáticamente en el proyecto paralelo. Identity, OAuth y los proveedores externos se analizan como alternativas para la versión moderna.

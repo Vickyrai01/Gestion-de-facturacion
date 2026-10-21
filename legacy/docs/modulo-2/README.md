@@ -1,6 +1,6 @@
 # Módulo 2 — Migración técnica del sistema legacy
 
-La rama `modulo-2-migracion-tecnica` parte del commit del Módulo 1. Incorpora persistencia SQL Server/EF6, productos, facturas, consultas WCF SOAP, un Windows Service y Forms Authentication. Todos los proyectos siguen apuntando a .NET Framework 4.8; MVC sigue en 5.2.9. La migración a .NET 10 se realizará en un proyecto independiente.
+Este módulo presenta persistencia SQL Server/EF6, productos, facturas, consultas WCF SOAP, un Windows Service y Forms Authentication. Todos los proyectos siguen apuntando a .NET Framework 4.8; MVC sigue en 5.2.9. La migración a .NET 10 se realizará en un proyecto independiente.
 
 ## Solución y dependencias
 

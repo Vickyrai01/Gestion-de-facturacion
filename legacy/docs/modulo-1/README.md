@@ -1,8 +1,8 @@
 # Módulo 1: Gap Tecnológico .NET — clases 1 y 2
 
-Este material describe la rama `modulo-1-gap-tecnologico`. En la rama acumulativa del Módulo 2, el almacenamiento en memoria se reemplazó por EF6 y las entidades se trasladaron a una biblioteca compartida; para ejecutar esa versión usar [la guía del Módulo 2](../modulo-2/README.md). Para recorrer los archivos originales del Módulo 1, consultar su rama.
+Este módulo presenta el diseño inicial del sistema y sus oportunidades de migración. El ejemplo inicial utiliza almacenamiento en memoria; la aplicación actual utiliza EF6 y entidades en una biblioteca compartida. Para preparar y ejecutar la aplicación actual, consultar [la guía del Módulo 2](../modulo-2/README.md).
 
-La reorganización de la rama del Módulo 2 ubica la solución actual en `legacy/SistemaFacturacion.Legacy.slnx` y sus dependencias en `legacy/packages/`. Los comandos y la estructura que siguen describen la rama histórica del Módulo 1; no son instrucciones para ejecutar la versión acumulativa reorganizada. No hay copias del sistema por módulo.
+La solución actual está en `legacy/SistemaFacturacion.Legacy.slnx` y sus dependencias en `legacy/packages/`. Los comandos y la estructura del ejemplo inicial que siguen se conservan como referencia conceptual para comparar ambos diseños.
 
 El Sistema de Gestión de Facturación es una aplicación legacy que servirá como referencia para construir otro sistema independiente en .NET 10 durante la capacitación. En este módulo permite administrar clientes; todavía no emite facturas.
 
@@ -94,10 +94,8 @@ docs/modulo-1/
   validacion.md
 ```
 
-Para la clase 1, comparar runtimes y hosting usando [gap-tecnologico.md](gap-tecnologico.md) y seguir una petición con [recorrido-codigo.md](recorrido-codigo.md). Para la clase 2, revisar `packages.config`, `HintPath`, restauración y compatibilidad en [dependencias.md](dependencias.md); elaborar el inventario de cambios con [puntos-de-migracion.md](puntos-de-migracion.md). Demostrar un alta, una edición, una desactivación y el reinicio de los datos. Los controles realizados y sus límites están en [validacion.md](validacion.md).
+Para la clase 1, comparar runtimes y hosting usando [gap-tecnologico.md](gap-tecnologico.md) y seguir una petición con [recorrido-codigo.md](recorrido-codigo.md). Para la clase 2, revisar `packages.config`, `HintPath`, restauración y compatibilidad en [dependencias.md](dependencias.md); elaborar el inventario de cambios con [puntos-de-migracion.md](puntos-de-migracion.md). Demostrar un alta, una edición, una desactivación y el reinicio de los datos. Los escenarios de prueba están en [validacion.md](validacion.md).
 
-## Ramas y módulos posteriores
+## Continuación del curso
 
-`main` conserva el proyecto inicial. `modulo-1-gap-tecnologico` parte de `main`; el trabajo se entrega sin commits ni pushes automáticos. El Módulo 2 partirá del resultado de esta rama; luego seguirán `modulo-3-arquitectura` y `modulo-4-modernizacion`, cada uno desde el módulo anterior.
-
-En el Módulo 2 habrá que definir e incorporar nuevas funcionalidades de facturación y las tecnologías legacy necesarias para su temario, incluyendo persistencia si se acuerda en su especificación. Entity Framework, autenticación, WCF y servicios de Windows quedan para módulos posteriores según el programa; no se fija aquí una asignación que aún no fue especificada. El Módulo 3 evolucionará la arquitectura legacy y el Módulo 4 sumará casos de modernización. La versión .NET 10 se desarrollará en otro proyecto independiente durante el curso.
+El Módulo 2 presenta persistencia con EF6, autenticación, WCF y servicios de Windows. El Módulo 3 estudia la separación de responsabilidades y el Módulo 4 aplica async/await, DI, logging y procesamiento en segundo plano. La versión .NET 10 se desarrolla en un proyecto independiente para comparar ambos sistemas.

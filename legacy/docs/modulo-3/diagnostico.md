@@ -1,6 +1,6 @@
 # Diagnóstico de arquitectura antes del refactor
 
-Base inspeccionada: `modulo-2-migracion-tecnica`, commit `cad49ff`. Las rutas de este documento parten de `legacy/`. Los hallazgos describen esa versión; la implementación del Módulo 3 evoluciona los mismos archivos.
+Este diagnóstico analiza el diseño presentado en el Módulo 2 y explica las responsabilidades que separa el Módulo 3. Las rutas de código parten de `legacy/`.
 
 ## Responsabilidades actuales
 

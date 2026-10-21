@@ -9,7 +9,7 @@ Se reutiliza ese patrón de composición manual en el Windows Service, sin conte
 - `ResumenPendientes(Func<int> contarPendientes, Serilog.ILogger log)` recibe la operación y el logger por constructor. La función permite componer el ciclo de vida del repositorio fuera del timer sin otra interfaz equivalente.
 - Su constructor por defecto selecciona esa composición y posee el logger que creó. Un logger inyectado sigue siendo propiedad del llamador.
 
-Se eliminaron `IConsultaPendientes`, `ConsultaPendientesEf`, `ConsultasProductosAsync` y su DTO local tras comprobar que sus consumidores estaban dentro del propio servicio. La consulta SQL de conteo tiene ahora una sola implementación en el repositorio; `FacturacionOperaciones.ContarPendientes` conserva la firma anterior delegando en él para compatibilidad.
+La consulta SQL de conteo tiene una sola implementación en el repositorio; `FacturacionOperaciones.ContarPendientes` delega en él como fachada de compatibilidad.
 
 DI es pasar la dependencia desde afuera; no requiere un contenedor. Ejemplo compatible con Framework, para una sesión C# o un arnés referenciando el ejecutable y Serilog:
 
@@ -21,7 +21,7 @@ using (var proceso = new FacturacionLegacy.WindowsService.ResumenPendientes(() =
 }
 ```
 
-Con un sink File o en memoria se pueden observar las propiedades. Para error controlado usar `() => { throw new InvalidOperationException("demo"); }`: devuelve false y registra TipoError sin el mensaje. El arnés `legacy/tools/ValidarModulo3.ps1` incorpora estas verificaciones y las de consultas async, además de los dobles del Módulo 3 que ejercitan sus interfaces. Las pruebas están preparadas, pendientes de ejecución en Windows.
+Con un sink File o en memoria se pueden observar las propiedades. Para error controlado usar `() => { throw new InvalidOperationException("demo"); }`: devuelve false y registra TipoError sin el mensaje. El arnés `legacy/tools/ValidarModulo3.ps1` incorpora estas verificaciones y las de consultas async, además de los dobles del Módulo 3 que ejercitan sus interfaces.
 
 ## Contenedor nativo en .NET 10
 

@@ -1,64 +1,90 @@
 using System;
 using System.Configuration;
-using System.IO;
 using System.Threading;
-using FacturacionLegacy.Datos;
+using Serilog;
 
 namespace FacturacionLegacy.WindowsService
 {
     public sealed class ResumenPendientes : IDisposable
     {
+        private readonly IConsultaPendientes consulta;
+        private readonly ILogger log;
+        private readonly IDisposable registroPropio;
+        private readonly object ciclo = new object();
         private Timer timer;
-        private int ejecutando;
-        private readonly object logLock = new object();
+        private bool ejecutando;
+        private bool detenido;
+
+        // Composición manual compatible con MVC 5 / .NET Framework, sin contenedor global.
+        public ResumenPendientes() : this(new ConsultaPendientesEf(), RegistroProcesamiento.Crear())
+        {
+            registroPropio = (IDisposable)log;
+        }
+
+        // Quien inyecta el logger conserva su propiedad y debe disponerlo.
+        public ResumenPendientes(IConsultaPendientes consulta, ILogger log)
+        {
+            if (consulta == null) throw new ArgumentNullException("consulta");
+            if (log == null) throw new ArgumentNullException("log");
+            this.consulta = consulta;
+            this.log = log;
+        }
+
         public bool EjecutarUnaVez()
         {
-            if (Interlocked.CompareExchange(ref ejecutando, 1, 0) != 0) return true;
+            lock (ciclo)
+            {
+                if (detenido) return false;
+                if (ejecutando) return true; // Tick omitido: nunca se superponen consultas.
+                ejecutando = true;
+            }
+            var inicio = System.Diagnostics.Stopwatch.StartNew();
             try
             {
-                using (var db = new FacturacionDbContext())
-                {
-                    db.Database.CommandTimeout = 30;
-                    int cantidad = FacturacionOperaciones.ContarPendientes(db);
-                    Escribir("Facturas pendientes: " + cantidad);
-                }
+                log.Information("Inicio de procesamiento de facturas pendientes");
+                int cantidad = consulta.Contar();
+                log.Information("Se encontraron {CantidadFacturas} facturas pendientes", cantidad);
+                if (Environment.UserInteractive) Console.WriteLine("Facturas pendientes: " + cantidad);
+                log.Information("Procesamiento finalizado en {DuracionMs} ms", inicio.ElapsedMilliseconds);
                 return true;
             }
             catch (Exception error)
             {
-                try { Escribir("Error de procesamiento: " + error.GetType().Name); }
+                if (Environment.UserInteractive) Console.Error.WriteLine("Error de procesamiento: " + error.GetType().Name);
+                try { log.Error("Procesamiento fallido: {TipoError}", error.GetType().Name); }
                 catch (Exception logError) { Console.Error.WriteLine("Error de registro: " + logError.GetType().Name); }
                 return false;
             }
-            finally { Interlocked.Exchange(ref ejecutando, 0); }
+            finally
+            {
+                lock (ciclo) { ejecutando = false; Monitor.PulseAll(ciclo); }
+            }
         }
+
         public void Iniciar()
         {
             int segundos;
             if (!int.TryParse(ConfigurationManager.AppSettings["IntervaloSegundos"], out segundos) || segundos < 5 || segundos > 86400)
                 throw new ConfigurationErrorsException("IntervaloSegundos debe estar entre 5 y 86400.");
-            timer = new Timer(_ => EjecutarUnaVez(), null, TimeSpan.Zero, TimeSpan.FromSeconds(segundos));
+            lock (ciclo)
+            {
+                if (detenido) throw new ObjectDisposedException("ResumenPendientes");
+                if (timer != null) throw new InvalidOperationException("El procesamiento ya está iniciado.");
+                timer = new Timer(_ => EjecutarUnaVez(), null, TimeSpan.Zero, TimeSpan.FromSeconds(segundos));
+            }
         }
+
         public void Dispose()
         {
-            if (timer == null) return;
-            using (var detenido = new ManualResetEvent(false))
+            lock (ciclo)
             {
-                // Dispose espera a que terminen los callbacks: no quedan tareas huérfanas.
-                if (timer.Dispose(detenido)) detenido.WaitOne();
-            }
-            timer = null;
-        }
-        private void Escribir(string mensaje)
-        {
-            string directorio = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["LogDirectory"] ?? "logs");
-            if (!Path.IsPathRooted(directorio)) directorio = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, directorio);
-            lock (logLock)
-            {
-                Directory.CreateDirectory(directorio);
-                string linea = DateTimeOffset.Now.ToString("O") + " " + mensaje;
-                File.AppendAllText(Path.Combine(directorio, DateTime.Now.ToString("yyyyMMdd") + ".log"), linea + Environment.NewLine);
-                if (Environment.UserInteractive) Console.WriteLine(linea);
+                if (detenido) return;
+                detenido = true;
+                if (timer != null) timer.Dispose();
+                timer = null;
+                // Los callbacks encolados ven detenido=true; el activo termina antes del cierre del log.
+                while (ejecutando) Monitor.Wait(ciclo);
+                if (registroPropio != null) registroPropio.Dispose();
             }
         }
     }

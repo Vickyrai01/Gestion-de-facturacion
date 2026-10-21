@@ -9,10 +9,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" /><Reference Include="System.Core" /><Reference Include="System.Data" />
+    <Reference Include="Serilog"><HintPath>..\packages\Serilog.2.12.0\lib\net45\Serilog.dll</HintPath></Reference>
+    <Reference Include="Serilog.Sinks.File"><HintPath>..\packages\Serilog.Sinks.File.5.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath></Reference>
     <Reference Include="System.Configuration" /><Reference Include="System.ServiceProcess" />
     <Reference Include="EntityFramework"><HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath></Reference>
     <Reference Include="EntityFramework.SqlServer"><HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath></Reference>
     <ProjectReference Include="..\FacturacionLegacy.Datos\FacturacionLegacy.Datos.csproj"><Project>{4622DB93-A19B-4613-8832-F790BE8A3731}</Project><Name>FacturacionLegacy.Datos</Name></ProjectReference>
+    <Compile Include="ConsultaPendientes.cs" /><Compile Include="RegistroProcesamiento.cs" /><Compile Include="ConsultasProductosAsync.cs" />
     <Compile Include="Program.cs" /><Compile Include="ResumenPendientes.cs" /><Compile Include="FacturacionService.cs" />
     <None Include="App.config" /><None Include="packages.config" />
   </ItemGroup>

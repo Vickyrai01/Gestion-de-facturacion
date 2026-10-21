@@ -27,8 +27,10 @@ La prueba valida el certificado IIS Express por su huella solo en el cliente loc
 ## Repetir y ampliar
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\ValidarModulo2.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\legacy\tools\ValidarModulo2.ps1
 ```
+
+Este comando parte de la raíz del repositorio; el script establece internamente `legacy/` como directorio de trabajo y compila `SistemaFacturacion.Legacy.slnx`.
 
 El script requiere permisos para LocalDB e iniciar IIS Express, certificado de desarrollo y puertos libres. La compilación puede omitirse con `-OmitirCompilacion` solo después de haber compilado la versión actual. La pasada final incluyó las comprobaciones de concurrencia y de ejecución periódica/detención.
 
@@ -37,3 +39,19 @@ El script requiere permisos para LocalDB e iniciar IIS Express, certificado de d
 No se realizó revisión visual ni ejecución de JavaScript en un navegador. Las operaciones MVC se probaron por HTTP y SQL; el agregado/quita de filas por jQuery queda para revisión visual. No se instaló el servicio en SCM ni se probó SQL Server Express bajo otra identidad. Tampoco se probó un cliente WCF generado, tráfico remoto, un despliegue de producción, carga prolongada ni escenarios distribuidos de login.
 
 La documentación explica esas configuraciones sin afirmar que se ejecutaron. No se construyó ni probó ninguna alternativa .NET 10. Los impuestos son didácticos, stock no se descuenta y no hay edición de facturas; las funciones de producción que exceden el módulo permanecen fuera de alcance.
+
+## Reorganización del repositorio — 21 de octubre de 2026
+
+Se reubicó el sistema completo en `legacy/` y la solución existente pasó a `legacy/SistemaFacturacion.Legacy.slnx`. Los paquetes se centralizaron en `legacy/packages/`, con referencias, imports de CodeDom, configuración NuGet, scripts y documentación ajustados. `modern/` contiene únicamente su README explicativo.
+
+Una comparación SHA-256 contra el estado anterior confirmó que los 476 archivos originalmente versionados están conservados: 456 mantienen contenido idéntico y 20 tienen ajustes de rutas, proyectos, scripts o documentación. No se modificó código funcional, vistas, recursos ni metadatos de migraciones. Los 318 archivos de paquetes previamente versionados conservan su contenido y quedan incluidos por las reglas de Git en su nueva ubicación. No se eliminaron las preferencias locales ni carpetas adicionales de la aplicación.
+
+Desde la nueva estructura se verificaron:
+
+- Las cinco referencias de la solución, ProjectReference y HintPath; todos resuelven correctamente y los cinco proyectos conservan .NET Framework 4.8.
+- Recompilación Debug y compilación Release, ambas con `MvcBuildViews=true` y código de salida 0.
+- Restauración de los cinco packages.config con `legacy/tools/RestaurarPaquetes.ps1`, código de salida 0, utilizando los paquetes presentes en la nueva carpeta compartida.
+- Las 63 verificaciones de `legacy/tools/ValidarModulo2.ps1`, incluido el cierre de procesos y eliminación de la base temporal propia. No se modificó la base principal.
+- Enlaces actuales del README general, README de modern y documentación del Módulo 2, además de la sintaxis de los scripts PowerShell.
+
+La primera ejecución dentro del sandbox no pudo acceder a LocalDB; se repitió con los permisos necesarios y la suite completa pasó. Esta comprobación no agrega una inspección visual ni una instalación en SCM a la evidencia anterior. La reorganización se realizó en `modulo-2-migracion-tecnica`, sin commits, pushes ni cambios en las ramas históricas.

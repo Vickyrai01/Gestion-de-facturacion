@@ -1,5 +1,7 @@
 # Entity Framework 6 y SQL Server
 
+Las rutas y comandos de este documento parten de `legacy/`, donde está `SistemaFacturacion.Legacy.slnx`. La carpeta de paquetes compartida es `legacy/packages/`.
+
 EF6 es un ORM: relaciona objetos C# y tablas y traduce consultas LINQ a SQL. `System.Data.Entity.DbContext` representa una unidad de trabajo; consulta, sigue cambios y los persiste con `SaveChanges`. Debe liberarse al terminar y no compartirse entre hilos. Ver [trabajo con DbContext](https://learn.microsoft.com/en-us/ef/ef6/fundamentals/working-with-dbcontext).
 
 ## Archivos y modelo real

@@ -1,6 +1,6 @@
 # Ejercicios para las clases 3, 4 y 5
 
-Trabajar en el proyecto .NET 10 independiente del curso. Esta rama queda como referencia; los ejercicios no incluyen soluciones modernas implementadas. Preparar la base y cuentas locales usando el README del Módulo 2 y emplear datos ficticios.
+Trabajar en el proyecto .NET 10 independiente del curso, que se construirá en `modern/`. Esta rama queda como referencia; los ejercicios no incluyen soluciones modernas implementadas. Las rutas de código mencionadas parten de `legacy/`. Preparar la base y cuentas locales usando el README del Módulo 2 y emplear datos ficticios.
 
 ## 1. Migrar un controller MVC 5
 

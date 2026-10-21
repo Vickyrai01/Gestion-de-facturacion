@@ -1,5 +1,7 @@
 # Windows Service tradicional
 
+Los comandos de desarrollo se ejecutan desde `legacy/`. La solución es `legacy/SistemaFacturacion.Legacy.slnx`; los nombres de proyecto y del servicio instalado se conservan.
+
 Un Windows Service es un proceso administrado por el Service Control Manager (SCM), con una identidad y un ciclo de vida propios. Puede funcionar sin una sesión de usuario. `ServiceBase` permite responder a inicio y detención. Ver [introducción a servicios Windows de .NET Framework](https://learn.microsoft.com/en-us/dotnet/framework/windows-services/introduction-to-windows-service-applications).
 
 ## Código y ciclo de vida

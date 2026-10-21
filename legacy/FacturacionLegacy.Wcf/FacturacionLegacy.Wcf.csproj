@@ -12,8 +12,8 @@
   <ItemGroup>
     <Reference Include="System" /><Reference Include="System.Core" /><Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" /><Reference Include="System.Runtime.Serialization" />
-    <Reference Include="EntityFramework"><HintPath>..\legacyGestionDeFacturacion.web\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath></Reference>
-    <Reference Include="EntityFramework.SqlServer"><HintPath>..\legacyGestionDeFacturacion.web\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath></Reference>
+    <Reference Include="EntityFramework"><HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath></Reference>
+    <Reference Include="EntityFramework.SqlServer"><HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath></Reference>
     <ProjectReference Include="..\FacturacionLegacy.Datos\FacturacionLegacy.Datos.csproj"><Project>{4622DB93-A19B-4613-8832-F790BE8A3731}</Project><Name>FacturacionLegacy.Datos</Name></ProjectReference>
     <Compile Include="Contratos.cs" /><Compile Include="FacturaConsultaService.svc.cs" /><Compile Include="SoloLocalAuthorizationManager.cs" />
     <Content Include="FacturaConsultaService.svc" /><Content Include="Web.config" /><None Include="packages.config" />

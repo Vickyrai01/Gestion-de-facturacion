@@ -1,5 +1,7 @@
 # Dependencias del Módulo 1
 
+Inventario histórico de la rama `modulo-1-gap-tecnologico`. En la rama acumulativa reorganizada, los paquetes se ubican en `legacy/packages/`; usar `legacy/tools/RestaurarPaquetes.ps1` para restaurar la versión actual. Los comandos de este documento conservan las rutas de la rama histórica.
+
 Inventario obtenido de [`packages.config`](../../legacyGestionDeFacturacion.web/packages.config) y del [proyecto web](../../legacyGestionDeFacturacion.web/legacyGestionDeFacturacion.web.csproj). Se conservaron las 18 entradas y sus versiones, sin agregar paquetes. Todos declaran `targetFramework="net48"`; esto registra el destino al instalarlos, no significa que todas sus bibliotecas solo admitan net48.
 
 ## Paquetes existentes

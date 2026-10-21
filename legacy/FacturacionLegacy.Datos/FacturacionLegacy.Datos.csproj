@@ -18,13 +18,13 @@
     <Reference Include="System" /><Reference Include="System.Core" /><Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations" /><Reference Include="System.Configuration" />
     <Reference Include="System.Xml" /><Reference Include="System.Xml.Linq" />
-    <Reference Include="EntityFramework"><HintPath>..\legacyGestionDeFacturacion.web\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath></Reference>
-    <Reference Include="EntityFramework.SqlServer"><HintPath>..\legacyGestionDeFacturacion.web\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath></Reference>
-    <Reference Include="BCrypt.Net-Next"><HintPath>..\legacyGestionDeFacturacion.web\packages\BCrypt.Net-Next.4.0.3\lib\net48\BCrypt.Net-Next.dll</HintPath></Reference>
-    <Reference Include="System.Memory"><HintPath>..\legacyGestionDeFacturacion.web\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath></Reference>
-    <Reference Include="System.Buffers"><HintPath>..\legacyGestionDeFacturacion.web\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath></Reference>
-    <Reference Include="System.Numerics.Vectors"><HintPath>..\legacyGestionDeFacturacion.web\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath></Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe"><HintPath>..\legacyGestionDeFacturacion.web\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath></Reference>
+    <Reference Include="EntityFramework"><HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath></Reference>
+    <Reference Include="EntityFramework.SqlServer"><HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath></Reference>
+    <Reference Include="BCrypt.Net-Next"><HintPath>..\packages\BCrypt.Net-Next.4.0.3\lib\net48\BCrypt.Net-Next.dll</HintPath></Reference>
+    <Reference Include="System.Memory"><HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath></Reference>
+    <Reference Include="System.Buffers"><HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath></Reference>
+    <Reference Include="System.Numerics.Vectors"><HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath></Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe"><HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath></Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entidades\*.cs" /><Compile Include="FacturacionDbContext.cs" />

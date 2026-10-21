@@ -1,5 +1,7 @@
 # Servicio WCF de consulta
 
+El proyecto está en `legacy/FacturacionLegacy.Wcf/`, dentro de `legacy/SistemaFacturacion.Legacy.slnx`. Los comandos del README se ejecutan desde `legacy/`.
+
 Windows Communication Foundation (WCF) ofrece contratos y endpoints para comunicar aplicaciones .NET Framework. SOAP transporta mensajes XML estructurados; no es una ruta MVC que devuelve HTML. Aquí se usa SOAP 1.1 mediante `basicHttpBinding` y HTTP solo para la demostración local.
 
 [`Contratos.cs`](../../FacturacionLegacy.Wcf/Contratos.cs) define `IFacturaConsultaService`: `[ServiceContract]` identifica el contrato y `[OperationContract]` sus operaciones. `[DataContract]` y `[DataMember]` delimitan los datos serializados. FacturaConsulta, FacturaResumen y DetalleConsulta son DTOs separados de EF6; no se serializan DbContext, proxies ni grafos de navegación. `ConsultaError` es un fault tipado.

@@ -9,6 +9,27 @@
 
 # Restored packages and local tools (existing tracked packages stay tracked)
 packages/
-tools/nuget.exe
-tools/.local/
+# Preserve the package versions already tracked before moving them to legacy/.
+!legacy/packages/
+legacy/packages/*
+!legacy/packages/Antlr.3.5.0.2/
+!legacy/packages/bootstrap.5.2.3/
+!legacy/packages/jQuery.3.7.0/
+!legacy/packages/jQuery.Validation.1.19.5/
+!legacy/packages/Microsoft.AspNet.Mvc.5.2.9/
+!legacy/packages/Microsoft.AspNet.Mvc.es.5.2.9/
+!legacy/packages/Microsoft.AspNet.Razor.3.2.9/
+!legacy/packages/Microsoft.AspNet.Razor.es.3.2.9/
+!legacy/packages/Microsoft.AspNet.Web.Optimization.1.1.3/
+!legacy/packages/Microsoft.AspNet.Web.Optimization.es.1.1.3/
+!legacy/packages/Microsoft.AspNet.WebPages.3.2.9/
+!legacy/packages/Microsoft.AspNet.WebPages.es.3.2.9/
+!legacy/packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1/
+!legacy/packages/Microsoft.jQuery.Unobtrusive.Validation.3.2.11/
+!legacy/packages/Microsoft.Web.Infrastructure.2.0.0/
+!legacy/packages/Modernizr.2.8.3/
+!legacy/packages/Newtonsoft.Json.13.0.3/
+!legacy/packages/WebGrease.1.6.0/
+legacy/tools/nuget.exe
+legacy/tools/.local/
 *.log

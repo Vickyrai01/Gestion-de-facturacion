@@ -4,7 +4,7 @@ La rama `modulo-2-migracion-tecnica` parte del commit del Módulo 1. Incorpora p
 
 ## Solución y dependencias
 
-Abrir `legacyGestionDeFacturacion.web/legacyGestionDeFacturacion.web.slnx` en Visual Studio para Windows con soporte para `.slnx`. La solución contiene:
+Abrir [legacy/SistemaFacturacion.Legacy.slnx](../../SistemaFacturacion.Legacy.slnx) en Visual Studio para Windows con soporte para `.slnx`. Todos los proyectos, paquetes, herramientas y esta documentación están dentro de `legacy/`. La solución contiene:
 
 | Proyecto | Responsabilidad |
 | --- | --- |
@@ -14,17 +14,18 @@ Abrir `legacyGestionDeFacturacion.web/legacyGestionDeFacturacion.web.slnx` en Vi
 | `FacturacionLegacy.WindowsService` | `ServiceBase`, timer y consulta periódica de pendientes; modos de consola y ejecución única. |
 | `FacturacionLegacy.Tools` | Ejecutable para aplicar/generar migraciones y crear cuentas locales sin contraseñas en el código. |
 
-Se mantiene `packages.config`. Nuevos paquetes únicos: EntityFramework 6.5.1; BCrypt.Net-Next 4.0.3 y sus dependencias System.Memory 4.5.4, System.Buffers 4.5.1, System.Numerics.Vectors 4.5.0 y System.Runtime.CompilerServices.Unsafe 4.5.3. Se usan sus assets compatibles con .NET Framework; las versiones anteriores de MVC, Razor y frontend se conservan. `NuGet.Config` dirige la restauración a `legacyGestionDeFacturacion.web/packages`. Las bibliotecas nuevas descargadas y `tools/nuget.exe` no se versionan.
+Se mantiene `packages.config`. Nuevos paquetes únicos: EntityFramework 6.5.1; BCrypt.Net-Next 4.0.3 y sus dependencias System.Memory 4.5.4, System.Buffers 4.5.1, System.Numerics.Vectors 4.5.0 y System.Runtime.CompilerServices.Unsafe 4.5.3. Se usan sus assets compatibles con .NET Framework; las versiones anteriores de MVC, Razor y frontend se conservan. `legacy/NuGet.Config` dirige la restauración a `legacy/packages`, compartida por los cinco proyectos. Se conservan los 318 archivos de paquetes que ya estaban versionados; las descargas adicionales, `tools/nuget.exe` y los artefactos locales siguen ignorados. Esta configuración solo se aplica al sistema legacy.
 
 ## Preparación local
 
 Requisitos: Windows, Visual Studio con Desarrollo de ASP.NET y web, MSBuild/targets web, Developer Pack 4.8, IIS Express con certificado de desarrollo y SQL Server LocalDB. Para WCF debe estar disponible la activación HTTP de WCF/.NET Framework en el equipo. SQL Server Express es una alternativa si no hay LocalDB.
 
-Desde la raíz, en Developer PowerShell de Visual Studio:
+Desde la raíz del repositorio, entrar primero en `legacy/`, en Developer PowerShell de Visual Studio:
 
 ```powershell
+Set-Location .\legacy
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\RestaurarPaquetes.ps1
-MSBuild .\legacyGestionDeFacturacion.web\legacyGestionDeFacturacion.web.slnx /t:Build /p:Configuration=Debug /p:MvcBuildViews=true
+MSBuild .\SistemaFacturacion.Legacy.slnx /t:Build /p:Configuration=Debug /p:MvcBuildViews=true
 .\FacturacionLegacy.Tools\bin\Debug\FacturacionLegacy.Tools.exe migrar
 .\FacturacionLegacy.Tools\bin\Debug\FacturacionLegacy.Tools.exe usuarios-demo
 ```
@@ -47,7 +48,7 @@ Para Express, reemplazar el origen por `.\SQLEXPRESS` en esos cuatro archivos y 
 
 Establecer MVC como proyecto de inicio y ejecutar con IIS Express/F5. Usar `https://localhost:44372/` y confiar en su certificado de desarrollo. HTTPS es obligatorio para MVC y sus cookies; HTTP no es una alternativa para iniciar sesión. Acceder con las contraseñas elegidas para las cuentas locales.
 
-Desde la raíz, iniciar WCF en otra consola después de compilar:
+Desde `legacy/`, iniciar WCF en otra consola después de compilar:
 
 ```powershell
 & "$env:ProgramFiles\IIS Express\iisexpress.exe" /path:"$PWD\FacturacionLegacy.Wcf" /port:60122 /systray:false
@@ -55,7 +56,7 @@ Desde la raíz, iniciar WCF en otra consola después de compilar:
 
 Consultar `http://localhost:60122/FacturaConsultaService.svc?wsdl`. Se utiliza `basicHttpBinding` SOAP 1.1 y se aceptan operaciones solo desde loopback para esta demostración. No comparte la cookie Forms del MVC. Detener con Ctrl+C. [wcf.md](wcf.md) explica consumo y contrato.
 
-El procesamiento manual usa la misma base y no cambia estados:
+El procesamiento manual usa la misma base y no cambia estados. Ejecutar también desde `legacy/`:
 
 ```powershell
 .\FacturacionLegacy.WindowsService\bin\Debug\FacturacionLegacy.WindowsService.exe --una-vez

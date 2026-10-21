@@ -2,6 +2,8 @@
 
 Este material describe la rama `modulo-1-gap-tecnologico`. En la rama acumulativa del Módulo 2, el almacenamiento en memoria se reemplazó por EF6 y las entidades se trasladaron a una biblioteca compartida; para ejecutar esa versión usar [la guía del Módulo 2](../modulo-2/README.md). Para recorrer los archivos originales del Módulo 1, consultar su rama.
 
+La reorganización de la rama del Módulo 2 ubica la solución actual en `legacy/SistemaFacturacion.Legacy.slnx` y sus dependencias en `legacy/packages/`. Los comandos y la estructura que siguen describen la rama histórica del Módulo 1; no son instrucciones para ejecutar la versión acumulativa reorganizada. No hay copias del sistema por módulo.
+
 El Sistema de Gestión de Facturación es una aplicación legacy que servirá como referencia para construir otro sistema independiente en .NET 10 durante la capacitación. En este módulo permite administrar clientes; todavía no emite facturas.
 
 ## Tecnologías y alcance

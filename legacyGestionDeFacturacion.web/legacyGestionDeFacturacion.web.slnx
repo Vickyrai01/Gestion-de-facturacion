@@ -1,7 +1,0 @@
-<Solution>
-  <Project Path="legacyGestionDeFacturacion.web.csproj" Id="b338094c-bb78-4813-9799-e35e08f7d3ed" />
-  <Project Path="../FacturacionLegacy.Datos/FacturacionLegacy.Datos.csproj" Id="4622db93-a19b-4613-8832-f790be8a3731" />
-  <Project Path="../FacturacionLegacy.Tools/FacturacionLegacy.Tools.csproj" Id="e36b9d32-115e-4d65-9c76-51e17dd4d274" />
-  <Project Path="../FacturacionLegacy.Wcf/FacturacionLegacy.Wcf.csproj" Id="e5d8748c-f5a1-4d06-90b5-7bc3d0f83f64" />
-  <Project Path="../FacturacionLegacy.WindowsService/FacturacionLegacy.WindowsService.csproj" Id="17f81977-d721-4a6e-a642-73e943371fae" />
-</Solution>

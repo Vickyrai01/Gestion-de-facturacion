@@ -7,7 +7,7 @@ New-Item -ItemType Directory -Path $localDir -Force | Out-Null
 $vswhere = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe'
 $msbuild = & $vswhere -latest -products '*' -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
 if (-not $OmitirCompilacion) {
-    & $msbuild legacyGestionDeFacturacion.web/legacyGestionDeFacturacion.web.slnx /t:Build /p:Configuration=Debug /p:MvcBuildViews=true /nologo /verbosity:minimal
+    & $msbuild SistemaFacturacion.Legacy.slnx /t:Build /p:Configuration=Debug /p:MvcBuildViews=true /nologo /verbosity:minimal
     if ($LASTEXITCODE -ne 0) { throw 'Falló la compilación.' }
 }
 $databaseName = 'FacturacionLegacyModulo2Pruebas_' + [Guid]::NewGuid().ToString('N')

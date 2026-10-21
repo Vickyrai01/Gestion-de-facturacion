@@ -126,6 +126,7 @@
     <Compile Include="Controllers\FacturasController.cs" /><Compile Include="Models\FacturaCrearModel.cs" />
     <Compile Include="Controllers\AccountController.cs" /><Compile Include="Models\LoginModel.cs" /><Compile Include="Seguridad\IntentosLogin.cs" />
     <Compile Include="Seguridad\PermisoAttribute.cs" />
+    <Compile Include="Composicion\FacturacionWeb.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

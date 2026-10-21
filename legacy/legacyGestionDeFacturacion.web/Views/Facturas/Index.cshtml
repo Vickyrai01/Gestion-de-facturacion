@@ -1,4 +1,4 @@
-@model IEnumerable<FacturacionLegacy.Datos.Entidades.Factura>
+@model IEnumerable<FacturacionLegacy.Datos.Facturacion.FacturaResumenDto>
 @{ ViewBag.Title = "Facturas"; }
 <h1>Facturas</h1>
 <p>@Html.ActionLink("Crear factura", "Create", null, new { @class = "btn btn-primary" })</p>
@@ -11,6 +11,6 @@
 <div class="table-responsive"><table class="table table-striped">
     <thead><tr><th>Número</th><th>Cliente</th><th>Fecha UTC</th><th>Estado</th><th>Total</th><th>Acciones</th></tr></thead>
     <tbody>@foreach (var factura in Model) {
-        <tr><td>@factura.Numero</td><td>@factura.Cliente.Nombre @factura.Cliente.Apellido</td><td>@factura.FechaEmision.ToString("yyyy-MM-dd HH:mm")</td><td>@factura.Estado</td><td>@factura.Total.ToString("N2")</td><td>@Html.ActionLink("Detalle", "Details", new { id = factura.Id })</td></tr>
+        <tr><td>@factura.Numero</td><td>@factura.ClienteNombre @factura.ClienteApellido</td><td>@factura.FechaEmision.ToString("yyyy-MM-dd HH:mm")</td><td>@factura.Estado</td><td>@factura.Total.ToString("N2")</td><td>@Html.ActionLink("Detalle", "Details", new { id = factura.Id })</td></tr>
     }</tbody>
 </table></div>

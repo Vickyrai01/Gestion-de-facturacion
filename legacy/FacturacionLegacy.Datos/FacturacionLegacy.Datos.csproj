@@ -30,6 +30,12 @@
     <Compile Include="Entidades\*.cs" /><Compile Include="FacturacionDbContext.cs" />
     <Compile Include="FacturacionOperaciones.cs" />
     <Compile Include="PasswordSeguridad.cs" />
+    <Compile Include="Clientes\*.cs" />
+    <Compile Include="Productos\*.cs" />
+    <Compile Include="Facturacion\Contratos.cs" />
+    <Compile Include="Facturacion\Aplicacion\*.cs" />
+    <Compile Include="Facturacion\Dominio\*.cs" />
+    <Compile Include="Facturacion\Infraestructura\*.cs" />
     <Compile Include="Migraciones\*.cs" />
     <EmbeddedResource Include="Migraciones\*.resx"><DependentUpon>%(Filename).cs</DependentUpon></EmbeddedResource>
     <None Include="packages.config" />

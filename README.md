@@ -24,6 +24,6 @@ El material del curso se organiza en cuatro módulos:
 1. [Análisis del sistema legacy](legacy/docs/modulo-1/README.md): runtime, hosting, dependencias y puntos de migración.
 2. [Tecnologías legacy](legacy/docs/modulo-2/README.md): EF6, SQL Server, cuentas locales, WCF y Windows Service.
 3. [Arquitectura](legacy/docs/modulo-3/README.md): dominio, aplicación, contratos, repositorios y composición manual.
-4. [Modernización de código](docs/modulo-4/README.md): async/await, DI, logging, background jobs y comparación con .NET 10.
+4. [Modernización de código](legacy/docs/modulo-4/README.md): async/await, DI, logging, background jobs y comparación con .NET 10.
 
 Los módulos estudian y evolucionan el mismo sistema. La documentación incluye ejemplos iniciales y recorridos sobre la aplicación actual para comparar responsabilidades y tecnologías.

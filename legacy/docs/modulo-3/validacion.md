@@ -30,7 +30,7 @@ El primer comando compila el legacy con vistas Razor y ejecuta las pruebas de ar
 
 El validador del Módulo 2 comprueba CRUD de clientes/productos, validaciones, login/logout y roles, creación y totales de facturas, precios históricos, persistencia, transiciones, filtros y numeración concurrente. También cubre WSDL, consultas SOAP, conteo periódico y detención normal del servicio.
 
-Compilar también Release con `MvcBuildViews=true` y completar las demostraciones de [async, logging y background jobs](../../../docs/modulo-4/README.md). Revisar MVC en navegador y, cuando corresponda, instalar el servicio con una identidad que tenga los permisos necesarios.
+Compilar también Release con `MvcBuildViews=true` y completar las demostraciones de [async, logging y background jobs](../modulo-4/README.md). Revisar MVC en navegador y, cuando corresponda, instalar el servicio con una identidad que tenga los permisos necesarios.
 
 ## Qué no demuestran los dobles
 

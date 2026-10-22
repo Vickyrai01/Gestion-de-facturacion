@@ -12,4 +12,4 @@ El Módulo 3 separa dominio, aplicación, contratos e infraestructura. El Módul
 
 Las rutas de Productos y Facturacion parten de `legacy/FacturacionLegacy.Datos/`; Composicion pertenece al proyecto web y WindowsService a `legacy/FacturacionLegacy.WindowsService/`.
 
-Para la demostración completa, seguir [arquitectura aplicada a la modernización](../../../docs/modulo-4/integracion-modulo-3.md) y las [pruebas de arquitectura](validacion.md). La composición sigue siendo compatible con MVC 5 y .NET Framework 4.8; el contenedor nativo de ASP.NET Core se estudia como comparación para .NET 10.
+Para la demostración completa, seguir [arquitectura aplicada a la modernización](../modulo-4/integracion-modulo-3.md) y las [pruebas de arquitectura](validacion.md). La composición sigue siendo compatible con MVC 5 y .NET Framework 4.8; el contenedor nativo de ASP.NET Core se estudia como comparación para .NET 10.

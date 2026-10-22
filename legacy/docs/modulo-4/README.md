@@ -13,7 +13,7 @@ Este módulo presenta async/await, inyección de dependencias, logging estructur
 
 ## Recorrido
 
-Leer [async-await](async-await.md), [logging](logging.md), [background-jobs](background-jobs.md), [dependency-injection](dependency-injection.md), [minimal-apis](minimal-apis.md) e [arquitectura aplicada a la modernización](integracion-modulo-3.md). La documentación anterior está en `legacy/docs/modulo-2/`; las nuevas guías usan rutas relativas a la raíz del repositorio salvo indicación.
+Leer [async-await](async-await.md), [logging](logging.md), [background-jobs](background-jobs.md), [dependency-injection](dependency-injection.md), [minimal-apis](minimal-apis.md) e [arquitectura aplicada a la modernización](integracion-modulo-3.md). Toda la documentación de los módulos está dentro de `legacy/docs/`.
 
 En Windows, con Visual Studio/MSBuild compatible con `.slnx`, Developer Pack 4.8 y SQL Server/LocalDB, desde la raíz:
 

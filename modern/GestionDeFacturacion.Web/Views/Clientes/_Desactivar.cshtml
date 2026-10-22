@@ -1,0 +1,14 @@
+@model GestionDeFacturacion.web.Models.Cliente
+
+@using (Html.BeginForm(
+    actionName: "Desactivar",
+    controllerName: "Clientes",
+    routeValues: new { id = Model.Id },
+    method: FormMethod.Post,
+    antiforgery: false,
+    htmlAttributes: new { @class = "d-inline" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="X-HTTP-Method-Override" value="PATCH" />
+    <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Desactivar a @Model.Nombre @Model.Apellido">Desactivar</button>
+}

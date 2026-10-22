@@ -1,0 +1,27 @@
+@model GestionDeFacturacion.web.Models.Cliente
+@{
+    ViewBag.Title = "Editar cliente";
+}
+
+<h1>Editar cliente</h1>
+<p>Estado actual: <strong>@(Model.Activo ? "Activo" : "Inactivo")</strong>.</p>
+@using (Html.BeginForm(
+    actionName: "Edit",
+    controllerName: "Clientes",
+    routeValues: new { id = Model.Id },
+    method: FormMethod.Post,
+    antiforgery: false,
+    htmlAttributes: new { @class = "formulario-cliente" }))
+{
+    @Html.AntiForgeryToken()
+    @await Html.PartialAsync("_Formulario", Model)
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-outline-secondary" })
+}
+
+@section scripts {
+    <script src="~/js/jquery.validate.min.js"></script>
+    <script src="~/js/jquery.validate.unobtrusive.min.js"></script>
+}
+
+

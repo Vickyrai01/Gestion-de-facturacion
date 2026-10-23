@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using GestionDeFacturacion.web.Models;
+using Newtonsoft.Json;
 
 namespace GestionDeFacturacion.web.Controllers
 {
@@ -93,6 +94,21 @@ namespace GestionDeFacturacion.web.Controllers
 
             TempData["Mensaje"] = "Cliente desactivado correctamente.";
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult EjemploJson()
+        {
+            var cliente = new
+            {
+                Id = 1,
+                Nombre = "Ana",
+                Apellido = "Pérez"
+            };
+
+            var json = JsonConvert.SerializeObject(cliente);
+
+            return Content(json, "application/json");
         }
     }
 }

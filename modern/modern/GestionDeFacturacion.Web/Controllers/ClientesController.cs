@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestionDeFacturacion.Web.Controllers;
 
-public class ClienteController: Controller
+public class ClientesController: Controller
 {
-    private readonly ClienteService clienteService;
+    private readonly ClientesService clienteService;
 
-    public ClienteController(ClienteService service)
+    public ClientesController(ClientesService service)
     {
         clienteService = service;
     }

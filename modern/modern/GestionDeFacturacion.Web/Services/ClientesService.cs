@@ -2,7 +2,7 @@ using GestionDeFacturacion.Web.Models;
 
 namespace GestionDeFacturacion.Web.Services;
 
-public class ClienteService
+public class ClientesService
 {
     private readonly List<Cliente> _clientes = [];
     private readonly object _sincronizacion = new();

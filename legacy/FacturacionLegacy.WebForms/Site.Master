@@ -1,0 +1,19 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="FacturacionLegacy.WebForms.SiteMaster" %>
+<!DOCTYPE html>
+<html lang="es">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="~/Content/Site.css" rel="stylesheet" runat="server" />
+    <title>Sistema de Facturación Legacy</title>
+</head>
+<body>
+    <form id="formPrincipal" runat="server">
+        <header class="site-header">
+            <h1>Sistema de Facturación Legacy</h1>
+            <nav aria-label="Navegación principal"><asp:HyperLink ID="lnkClientes" runat="server" NavigateUrl="~/Clientes.aspx" Text="Clientes" aria-current="page" /></nav>
+        </header>
+        <main><asp:ContentPlaceHolder ID="ContenidoPrincipal" runat="server" /></main>
+    </form>
+</body>
+</html>

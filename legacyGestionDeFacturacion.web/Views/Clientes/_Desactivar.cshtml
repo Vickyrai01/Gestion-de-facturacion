@@ -1,8 +1,0 @@
-@model legacyGestionDeFacturacion.web.Models.Cliente
-
-@using (Html.BeginForm("Desactivar", "Clientes", new { id = Model.Id }, FormMethod.Post, new { @class = "d-inline" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.HttpMethodOverride(HttpVerbs.Patch)
-    <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Desactivar a @Model.Nombre @Model.Apellido">Desactivar</button>
-}

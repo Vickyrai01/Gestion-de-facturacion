@@ -1,8 +1,7 @@
 @model List<GestionDeFacturacion.Web.Models.Cliente>
 @{
-    ViewData["Title"] = "Cliente";
+    ViewData["Title"] = "Clientes";
 }
-@section Styles {<link rel="stylesheet" href="~/css/clientes.css" asp-append-version="true" />}
 
     <h2>Gestión de clientes</h2>
     <p class="page-description">Registrá un cliente y consultá el listado de clientes registrados.</p>
@@ -10,10 +9,10 @@
         <h3 id="tituloRegistro">Registrar cliente</h3>
         <form asp-controller= "Clientes" asp-action="Crear" method="post">
         
-            <div asp-validation-summary="ModelOnly" class="text-danger"/>
+            <div asp-validation-summary="ModelOnly"></div>
             <div class="form-fields">
             <p class="field">
-                <Label Text="Nombre" />
+                <label for="Nombre">Nombre</label>
                 @Html.TextBox("Nombre", null, new {maxlength = 100, required = "required"})
                 @Html.ValidationMessage("Nombre")
             </p>
@@ -64,5 +63,3 @@
                     }
             </div>
         </section>
-    </div>
-    </section>

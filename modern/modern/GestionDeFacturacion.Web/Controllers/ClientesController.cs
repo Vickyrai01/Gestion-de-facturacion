@@ -1,3 +1,4 @@
+using GestionDeFacturacion.Web.Models;
 using GestionDeFacturacion.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,4 +21,23 @@ public class ClientesController: Controller
 
         // return View(clienteService.Listar());
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Crear([Bind("Nombre,Email")] Cliente cliente)
+    {
+        if (ModelState.IsValid)
+        {
+            if (clienteService.Registrar(cliente.Nombre, cliente.Email))
+            {
+                TempData["Mensaje"] = "Cliente registrado correctamente.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            ModelState.AddModelError(nameof(cliente.Email), "Ya existe un cliente con ese email.");
+        }
+
+        return View("Index", clienteService.Listar());
+    }
+
 }

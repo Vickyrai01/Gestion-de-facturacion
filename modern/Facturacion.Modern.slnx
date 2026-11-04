@@ -1,0 +1,8 @@
+<Solution>
+	<Folder Name="/src/">
+	<Project Path="Facturacion.Modern.Domain/Facturacion.Modern.Domain.csproj" />
+	<Project Path="Facturacion.Modern.Application/Facturacion.Modern.Application.csproj" />
+	<Project Path="Facturacion.Modern.Infrastructure/Facturacion.Modern.Infrastructure.csproj" />
+	<Project Path="Facturacion.Modern.Api/Facturacion.Modern.Api.csproj" />
+  </Folder>
+</Solution>

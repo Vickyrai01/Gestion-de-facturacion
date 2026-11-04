@@ -1,0 +1,27 @@
+using Facturacion.Modern.Application;
+using Facturacion.Modern.Domain;
+using Facturacion.Modern.Infrastructure;
+var builder=WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<InMemoryClienteRepository>(); builder.Services.AddSingleton<IClienteRepository>(x=>x.GetRequiredService<InMemoryClienteRepository>());
+builder.Services.AddSingleton<InMemoryProductoRepository>(); builder.Services.AddSingleton<IProductoRepository>(x=>x.GetRequiredService<InMemoryProductoRepository>());
+builder.Services.AddSingleton<InMemoryFacturaRepository>(); builder.Services.AddSingleton<IFacturaRepository>(x=>x.GetRequiredService<InMemoryFacturaRepository>());
+builder.Services.AddSingleton<IPasswordService,PasswordService>(); builder.Services.AddSingleton<IUsuarioRepository,InMemoryUsuarioRepository>();
+builder.Services.AddSingleton<FacturacionService>(); builder.Services.AddSingleton<CatalogoService>(); builder.Services.AddSingleton<AutenticacionService>();
+var app=builder.Build();
+app.MapGet("/",()=>Results.Ok(new { sistema="Sistema de Gestión de Facturación", arquitectura="Clean Architecture + DDD", persistencia="in-memory" }));
+app.MapPost("/api/auth/login",(LoginRequest r,AutenticacionService s)=>s.Login(r.NombreUsuario,r.Password) is { } result ? Results.Ok(new { usuario=result.Usuario.NombreUsuario, rol=result.Usuario.Rol.ToString(), token=result.Token }) : Results.Unauthorized());
+app.MapGet("/api/clientes",(CatalogoService s)=>Results.Ok(s.Clientes()));
+app.MapGet("/api/clientes/{id:int}",(int id,CatalogoService s)=>s.ObtenerCliente(id) is { } x?Results.Ok(x):Results.NotFound());
+app.MapPost("/api/clientes",(ClienteRequest r,CatalogoService s)=>Try(()=>s.CrearCliente(r.Nombre,r.Apellido,r.Documento,r.Email)));
+app.MapGet("/api/productos",(CatalogoService s)=>Results.Ok(s.Productos()));
+app.MapGet("/api/productos/{id:int}",(int id,CatalogoService s)=>s.ObtenerProducto(id) is { } x?Results.Ok(x):Results.NotFound());
+app.MapPost("/api/productos",(ProductoRequest r,CatalogoService s)=>Try(()=>s.CrearProducto(r.Codigo,r.Nombre,r.Descripcion,r.PrecioUnitario,r.Stock)));
+app.MapGet("/api/facturas",(int? clienteId,EstadoFactura? estado,FacturacionService s)=>Results.Ok(s.Consultar(clienteId,estado)));
+app.MapGet("/api/facturas/{id:int}",(int id,FacturacionService s)=>s.Obtener(id) is { } x?Results.Ok(x):Results.NotFound());
+app.MapPost("/api/facturas",(CrearFacturaRequest r,FacturacionService s)=>Try(()=>s.Crear(new(r.ClienteId,r.Lineas.Select(x=>new LineaFactura(x.ProductoId,x.Cantidad)).ToArray(),r.TasaImpuestos))));
+app.MapPost("/api/facturas/{id:int}/emitir",(int id,FacturacionService s)=>s.Emitir(id)?Results.Ok():Results.Conflict("Solo se puede emitir una factura pendiente."));
+app.MapPost("/api/facturas/{id:int}/anular",(int id,FacturacionService s)=>s.Anular(id)?Results.Ok():Results.Conflict("La factura ya está anulada."));
+app.MapGet("/api/reportes/pendientes",(FacturacionService s)=>Results.Ok(new { cantidad=s.ContarPendientes() }));
+app.Run();
+static IResult Try<T>(Func<T> action) { try{return Results.Created("",action());} catch(DomainException e){return Results.BadRequest(new { error=e.Message });} catch(ArgumentException e){return Results.BadRequest(new { error=e.Message });} }
+record LoginRequest(string NombreUsuario,string Password); record ClienteRequest(string Nombre,string Apellido,string Documento,string Email); record ProductoRequest(string Codigo,string Nombre,string? Descripcion,decimal PrecioUnitario,int Stock); record LineaRequest(int ProductoId,int Cantidad); record CrearFacturaRequest(int ClienteId,IReadOnlyCollection<LineaRequest> Lineas,decimal TasaImpuestos);

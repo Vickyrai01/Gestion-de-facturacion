@@ -1,9 +1,22 @@
-# Sistema moderno — espacio reservado
+# Sistema moderno de gestión de facturación
 
-Esta carpeta se utilizará durante la capacitación para construir un Sistema de Gestión de Facturación independiente en .NET 10.
+Migración del sistema legacy a .NET 10 con Clean Architecture y Domain-Driven Design.
 
-Por ahora no contiene solución, proyectos, código ni dependencias. No se realizó ninguna migración.
+## Estructura
 
-El sistema de referencia existente está en [legacy/](../legacy/SistemaFacturacion.Legacy.slnx), con .NET Framework 4.8, ASP.NET MVC 5, Entity Framework 6, WCF y Windows Service. Su ejecución y preparación se describen en la [guía del Módulo 2](../legacy/docs/modulo-2/README.md).
+- `Facturacion.Modern.Domain`: entidades, agregados y reglas de negocio.
+- `Facturacion.Modern.Application`: casos de uso y puertos.
+- `Facturacion.Modern.Infrastructure`: repositorios en memoria y hashing PBKDF2.
+- `Facturacion.Modern.Api`: ASP.NET Core Minimal API y composición de dependencias.
 
-Cada módulo se representa mediante una rama Git acumulativa. No crear copias del sistema en carpetas por módulo ni compartir proyectos o referencias del legacy con este futuro sistema.
+No se migró Entity Framework, SQL Server, WCF ni el Windows Service. Toda la información se conserva en memoria y se pierde al reiniciar.
+
+## Ejecutar
+
+```powershell
+dotnet run --project .\Facturacion.Modern.Api\Facturacion.Modern.Api.csproj
+```
+
+Usuarios demo: `admin` / `FACTURACION_ADMIN_PASSWORD` y `operador` / `FACTURACION_OPERADOR_PASSWORD`.
+
+Endpoints principales: `/api/auth/login`, `/api/clientes`, `/api/productos`, `/api/facturas` y `/api/reportes/pendientes`.

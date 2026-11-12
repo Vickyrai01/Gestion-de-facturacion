@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "Facturacion.Api.Grpc";
+
+package clientes;
+
+service ClientesGrpc {
+  rpc GetCliente (GetClienteRequest) returns (ClienteReply);
+}
+
+message GetClienteRequest {
+  int32 id = 1;
+}
+
+message ClienteReply {
+  int32 id = 1;
+  string nombre = 2;
+  string apellido = 3;
+  string documento = 4;
+  string email = 5;
+  bool activo = 6;
+}

@@ -1,18 +1,51 @@
+using Facturacion.Api;
+using Facturacion.Api.Grpc;
+using Facturacion.Infrastructure;
+using Facturacion.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddControllers();
+builder.Services.AddGrpc();
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+    {
+        Title = "Facturación API",
+        Version = "v1"
+    });
+});
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplicationServices();
+builder.Services.AddHostedService<FacturacionWorker>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+// Deja constancia inequívoca del binario y la configuración efectiva. Esto
+// permite detectar inmediatamente si se está ejecutando una salida antigua.
+app.Logger.LogInformation(
+    "Facturacion.Api runtime marker {Marker}; Assembly={Assembly}; Environment={Environment}; Urls={Urls}",
+    "openapi-swagger-http-v2",
+    typeof(Program).Assembly.Location,
+    app.Environment.EnvironmentName,
+    string.Join(",", app.Urls));
 
-app.UseHttpsRedirection();
+// Los documentos se publican en todos los entornos para que los perfiles
+// http/https de launchSettings.json y los despliegues no dependan del entorno.
+app.MapOpenApi();
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Facturación API v1");
+    options.RoutePrefix = "swagger";
+});
+
+// No forzar una redirección aquí: el perfil http expone deliberadamente el
+// puerto 5246 y debe permitir probar /openapi/v1.json y /swagger en HTTP.
+app.MapControllers();
+app.MapGrpcService<ClientesGrpcService>();
 
 var summaries = new[]
 {

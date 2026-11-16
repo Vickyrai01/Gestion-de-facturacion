@@ -1,10 +1,13 @@
 using Facturacion.Infrastructure.Persistence.Models;
 using Facturacion.Services.Productos;
+using Facturacion.Api.Seguridad;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Facturacion.Api.Controllers;
 
 [ApiController]
+[Authorize(Policy = Politicas.Consultar)]
 [Route("api/productos")]
 public sealed class ProductosController : ControllerBase
 {
@@ -44,6 +47,7 @@ public sealed class ProductosController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = Politicas.GestionarCatalogo)]
     public async Task<ActionResult<Producto>> Create(Producto producto, CancellationToken cancellationToken)
     {
         try
@@ -62,6 +66,7 @@ public sealed class ProductosController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Policy = Politicas.GestionarCatalogo)]
     public async Task<ActionResult<Producto>> Update(
         int id,
         Producto producto,
@@ -88,6 +93,7 @@ public sealed class ProductosController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = Politicas.GestionarCatalogo)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         try

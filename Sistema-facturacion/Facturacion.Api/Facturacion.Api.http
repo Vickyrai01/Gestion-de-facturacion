@@ -1,6 +1,91 @@
 @Facturacion.Api_HostAddress = http://localhost:5246
 
+# Clase 6 — escenarios de prueba de la migración de autenticación.
+# Requiere las cuentas admin/ADMIN y operador/OPERADOR migradas desde el legacy
+# (hash BCrypt). Reemplazar las contraseñas por las que se usaron en el legacy.
+# Los pasos asumen que el cliente conserva la cookie Facturacion.Auth entre
+# peticiones (REST Client de VS Code lo hace). Si el tuyo no la conserva, usar
+# los ejemplos con curl de docs/clase-6-autenticacion.md.
+
+@passwordAdmin = admin-clase-6!
+@passwordOperador = operador-clase-6!
+
+### 1. Sin credenciales -> 401
+GET {{Facturacion.Api_HostAddress}}/api/clientes
+
+### 2. Contraseña incorrecta -> 401 con mensaje genérico
+POST {{Facturacion.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "operador", "password": "contraseña-incorrecta" }
+
+### 3. Usuario inexistente -> 401, mismo mensaje que el caso 2
+POST {{Facturacion.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "no-existe", "password": "contraseña-incorrecta" }
+
+### 4. Login de OPERADOR con su contraseña del legacy -> 204 + cookie
+#    En el log: "Cuenta N migrada de BCrypt al hash de Identity."
+POST {{Facturacion.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "operador", "password": "{{passwordOperador}}" }
+
+### 5. ¿Quién soy? -> rol OPERADOR
+GET {{Facturacion.Api_HostAddress}}/api/auth/yo
+
+### 6. OPERADOR consulta -> 200
+GET {{Facturacion.Api_HostAddress}}/api/clientes
+
+### 7. OPERADOR intenta borrar -> 403 (autenticado, pero sin permiso)
+DELETE {{Facturacion.Api_HostAddress}}/api/productos/1
+
+### 8. OPERADOR intenta administrar usuarios -> 403
+GET {{Facturacion.Api_HostAddress}}/api/usuarios
+
+### 9. Logout -> 204; repetir el paso 6 debe dar 401
+POST {{Facturacion.Api_HostAddress}}/api/auth/logout
+
+### 10. Login de ADMIN -> 204 + cookie
+POST {{Facturacion.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "admin", "password": "{{passwordAdmin}}" }
+
+### 11. ADMIN ve el estado de migración de cada cuenta (nunca el hash)
+GET {{Facturacion.Api_HostAddress}}/api/usuarios
+
+### 12. ADMIN desactiva al operador (reemplazar el id)
+#    Si el operador tenía una cookie abierta, su próxima petición da 401.
+PUT {{Facturacion.Api_HostAddress}}/api/usuarios/2
+Content-Type: application/json
+
+{ "rol": "OPERADOR", "activo": false }
+
+### 13. Operador inactivo con contraseña correcta -> 401
+POST {{Facturacion.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "nombreUsuario": "operador", "password": "{{passwordOperador}}" }
+
+### 14. Reactivar al operador
+PUT {{Facturacion.Api_HostAddress}}/api/usuarios/2
+Content-Type: application/json
+
+{ "rol": "OPERADOR", "activo": true }
+
+### 15. Alta de usuario nuevo: se guarda directamente con hash de Identity
+POST {{Facturacion.Api_HostAddress}}/api/usuarios
+Content-Type: application/json
+
+{ "nombreUsuario": "operador2", "password": "una-contraseña-larga", "rol": "OPERADOR" }
+
+### 16. Demo OIDC: access token emitido por el proveedor (Autenticacion:Oidc:Authority)
+@accessToken = pegar-el-access-token
+GET {{Facturacion.Api_HostAddress}}/api/auth/yo
+Authorization: Bearer {{accessToken}}
+
+### Endpoint anónimo de ejemplo
 GET {{Facturacion.Api_HostAddress}}/weatherforecast/
 Accept: application/json
-
-###

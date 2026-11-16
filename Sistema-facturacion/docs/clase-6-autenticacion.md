@@ -62,21 +62,57 @@ El legacy volvía a consultar la cuenta en cada petición. Acá se mantiene ese 
 
 ## Ejecutar
 
+### 1. Base de datos (Oracle Free en Docker)
+
+Desde `Sistema-facturacion/`:
+
+```bash
+docker compose up -d
+docker compose logs -f oracle      # esperar "DATABASE IS READY TO USE!" (1-3 min la primera vez)
+```
+
+La primera vez que arranca, el contenedor ejecuta los scripts de [db/](../db):
+
+- [01-esquema.sql](../db/01-esquema.sql) crea el usuario `facturacion_app` y las tablas que mapea `FacturacionDbContext`.
+- [02-datos-demo.sql](../db/02-datos-demo.sql) carga clientes, productos y dos cuentas con hash BCrypt, como las del legacy:
+
+| Usuario | Contraseña | Rol |
+|---|---|---|
+| `admin` | `admin-clase-6!` | ADMIN |
+| `operador` | `operador-clase-6!` | OPERADOR |
+
+Para empezar de cero: `docker compose down -v && docker compose up -d`.
+
+Para repetir la demostración de migración sin recrear la base, se puede restaurar el hash BCrypt con el `UPDATE` correspondiente. Los valores están en `02-datos-demo.sql`.
+
+### 2. API
+
+Requiere el SDK de .NET 10 (`brew install --cask dotnet-sdk`).
+
 ```bash
 cd Sistema-facturacion/Facturacion.Api
 dotnet run --launch-profile http
 ```
 
-Después ejecutar los pasos de [Facturacion.Api.http](../Facturacion.Api/Facturacion.Api.http) en orden. Antes, completar `passwordAdmin` y `passwordOperador` con las contraseñas que se eligieron en el legacy al correr `FacturacionLegacy.Tools.exe usuarios-demo`.
+La API queda en `http://localhost:5246`, y Swagger en `/swagger`.
+
+### 3. Probar
+
+Ejecutar los pasos de [Facturacion.Api.http](../Facturacion.Api/Facturacion.Api.http) en orden. Por ejemplo, en VS Code con la extensión REST Client. Las contraseñas de la base demo ya están cargadas en el archivo.
 
 Con `curl`:
 
 ```bash
-curl -i -c cookies.txt -H 'Content-Type: application/json' \
-  -d '{"nombreUsuario":"operador","password":"..."}' http://localhost:5246/api/auth/login
-curl -i -b cookies.txt http://localhost:5246/api/clientes          # 200
-curl -i -b cookies.txt -X DELETE http://localhost:5246/api/productos/1   # 403
+B=http://localhost:5246
+curl -i $B/api/clientes                                              # 401
+curl -i -c op.txt -H 'Content-Type: application/json' \
+  -d '{"nombreUsuario":"operador","password":"operador-clase-6!"}' $B/api/auth/login   # 204
+curl -i -b op.txt $B/api/auth/yo                                     # rol OPERADOR
+curl -i -b op.txt $B/api/clientes                                    # 200
+curl -i -b op.txt -X DELETE $B/api/productos/1                       # 403
 ```
+
+En la consola de la API aparece `Cuenta N migrada de BCrypt al hash de Identity.` en el primer login de cada cuenta.
 
 ## Demostración OAuth/OIDC (bearer token)
 

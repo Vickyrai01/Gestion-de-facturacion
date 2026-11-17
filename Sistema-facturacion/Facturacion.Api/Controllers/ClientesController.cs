@@ -1,10 +1,13 @@
 using Facturacion.Infrastructure.Persistence.Models;
 using Facturacion.Services.Clientes;
+using Facturacion.Api.Seguridad;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Facturacion.Api.Controllers;
 
 [ApiController]
+[Authorize(Policy = Politicas.Consultar)]
 [Route("api/clientes")]
 public sealed class ClientesController : ControllerBase
 {
@@ -40,6 +43,7 @@ public sealed class ClientesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = Politicas.GestionarCatalogo)]
     public async Task<ActionResult<Cliente>> Create(Cliente cliente, CancellationToken cancellationToken)
     {
         try
@@ -58,6 +62,7 @@ public sealed class ClientesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Policy = Politicas.GestionarCatalogo)]
     public async Task<ActionResult<Cliente>> Update(
         int id,
         Cliente cliente,
@@ -84,6 +89,7 @@ public sealed class ClientesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = Politicas.GestionarCatalogo)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         try

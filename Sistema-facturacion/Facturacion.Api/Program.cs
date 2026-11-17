@@ -1,5 +1,6 @@
 using Facturacion.Api;
 using Facturacion.Api.Grpc;
+using Facturacion.Api.Seguridad;
 using Facturacion.Infrastructure;
 using Facturacion.Services;
 
@@ -19,6 +20,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplicationServices();
+// Clase 6: Identity sobre USUARIOS, cookie/bearer y políticas por operación.
+builder.Services.AddSeguridad(builder.Configuration);
 builder.Services.AddHostedService<FacturacionWorker>();
 
 var app = builder.Build();
@@ -34,7 +37,7 @@ app.Logger.LogInformation(
 
 // Los documentos se publican en todos los entornos para que los perfiles
 // http/https de launchSettings.json y los despliegues no dependan del entorno.
-app.MapOpenApi();
+app.MapOpenApi().AllowAnonymous();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
@@ -42,10 +45,17 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "swagger";
 });
 
+// Orden importante: primero se identifica al usuario (autenticación) y después
+// se decide si puede ejecutar el endpoint (autorización).
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseRateLimiter();
+
 // No forzar una redirección aquí: el perfil http expone deliberadamente el
 // puerto 5246 y debe permitir probar /openapi/v1.json y /swagger en HTTP.
 app.MapControllers();
-app.MapGrpcService<ClientesGrpcService>();
+app.MapGrpcService<ClientesGrpcService>()
+    .RequireAuthorization(Politicas.Consultar);
 
 var summaries = new[]
 {
@@ -64,7 +74,8 @@ app.MapGet("/weatherforecast", () =>
         .ToArray();
     return forecast;
 })
-.WithName("GetWeatherForecast");
+.WithName("GetWeatherForecast")
+.AllowAnonymous();
 
 app.Run();
 

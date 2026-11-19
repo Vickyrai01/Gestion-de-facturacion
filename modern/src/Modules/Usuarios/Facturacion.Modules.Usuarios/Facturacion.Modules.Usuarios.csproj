@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Facturacion.BuildingBlocks\Facturacion.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Facturacion.BuildingBlocks.Infrastructure\Facturacion.BuildingBlocks.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Facturacion.Tests" />
+  </ItemGroup>
+</Project>
+

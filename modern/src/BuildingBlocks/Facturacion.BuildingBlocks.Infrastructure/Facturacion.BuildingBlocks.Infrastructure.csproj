@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Infraestructura transversal compartida entre módulos:
+    configuración de EF Core (SQL Server u Oracle o InMemory) y traducción
+    de resultados a respuestas HTTP.
+  -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Facturacion.BuildingBlocks\Facturacion.BuildingBlocks.csproj" />
+  </ItemGroup>
+</Project>
+

@@ -1,24 +1,39 @@
-# Sistema de Gestión de Facturación
+# Sistema de Gestión de Facturación — Curso de Migración .NET Framework 4.8 a .NET 10
 
-Aplicación de referencia para una capacitación de migración desde .NET Framework a .NET moderno. Esta rama acumula el Módulo 1 y el Módulo 2: clientes, productos, facturas, EF6/SQL Server, consultas SOAP WCF, Windows Service y Forms Authentication, conservando ASP.NET MVC 5 sobre .NET Framework 4.8.
+Repositorio de referencia para la capacitación práctica de migración desde **.NET Framework 4.8** hacia **.NET 10**.
 
-El repositorio separa los dos sistemas en carpetas independientes:
+## Estructura del repositorio en la Clase 7 (`clase-7`)
 
 ```text
-SistemaFacturacion/
-  legacy/     # Sistema existente en .NET Framework 4.8
-  modern/     # Espacio reservado para el futuro proyecto .NET 10
+Gestion-de-facturacion/
+├── legacy/                   # Sistema original en .NET Framework 4.8 (MVC 5, EF6, WCF, Windows Service)
+├── Sistema-facturacion/      # Evolución técnica de las Clases 4, 5 y 6 (.NET 10 por capas horizontales)
+└── modern/                   # Clase 7: Refactor de Arquitectura a Monolito Modular + Clean Architecture + DDD (.NET 10)
 ```
 
-Abrir [legacy/SistemaFacturacion.Legacy.slnx](legacy/SistemaFacturacion.Legacy.slnx) en Visual Studio para Windows. Dentro de `legacy/` se conservan los cinco proyectos existentes, sus paquetes NuGet, herramientas y documentación. Para restaurar y compilar desde Developer PowerShell:
+---
+
+## Clase 7: Refactor de Arquitectura .NET (`modern/`)
+
+En [modern/Facturacion.Modern.slnx](modern/Facturacion.Modern.slnx) se encuentra la migración completa del sistema legacy a un **Monolito Modular** en **.NET 10**, diseñada para dictar el laboratorio sobre código propio cubriendo los 5 ejes del temario:
+
+1. **Monolito a Modular Monolith:** División vertical en 4 módulos autónomos (`Clientes`, `Productos`, `Facturacion`, `Usuarios`) con proyectos `.Contracts` para comunicación en memoria y un `DbContext` `internal` por módulo.
+2. **Separación de capas:** `Domain` $\leftarrow$ `Application` $\leftarrow$ `Infrastructure` / `Presentation` dentro de cada módulo.
+3. **Eliminación de lógica en controllers:** Controllers de 1 a 4 líneas por acción, sin referencias a `DbContext`, sin `ConfigurationManager` y sin bloques `try/catch` repetitivos.
+4. **Desacople DTO / repositorios:** Requests y DTOs específicos por caso de uso (`UsuarioDto` nunca expone `PasswordHash`; las entidades de dominio no tienen propiedades de navegación circulares entre módulos) y repositorios orientados al agregado.
+5. **Clean Architecture / DDD:** Entidades con invariantes encapsuladas, Value Objects (`EmailCliente`, `CodigoProducto`), patrón `Result<T>` / `Error`, y `Factura` como **Aggregate Root** que gobierna sus `Detalles`, cálculos financieros y transiciones de estado (`Emitir`, `Anular`).
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\legacy\tools\RestaurarPaquetes.ps1
-MSBuild .\legacy\SistemaFacturacion.Legacy.slnx /t:Build /p:Configuration=Debug /p:MvcBuildViews=true
+# Ejecutar tests de arquitectura (Fitness Functions), tests unitarios DDD y tests de integración HTTP
+dotnet test --solution .\modern\Facturacion.Modern.slnx
+
+# Levantar el Host del Monolito Modular (http://localhost:5246/swagger)
+dotnet run --project .\modern\src\Facturacion.Api\Facturacion.Api.csproj
 ```
 
-Ejecutar el proyecto MVC con IIS Express. La preparación de base de datos y cuentas locales está en la guía del Módulo 2. `modern/` solo contiene un [README explicativo](modern/README.md); todavía no existe un proyecto .NET 10.
+---
 
-La [guía del Módulo 2](legacy/docs/modulo-2/README.md) explica preparación de la base, cuentas locales, ejecución y material de las clases 3, 4 y 5. La [guía del Módulo 1](legacy/docs/modulo-1/README.md) conserva el contexto histórico de su rama y las clases 1 y 2.
+## Contexto histórico de los módulos anteriores
 
-Los módulos evolucionan el mismo sistema legacy mediante ramas acumulativas; no hay carpetas con copias del código por módulo. La reorganización está aplicada en `modulo-2-migracion-tecnica`; las ramas históricas conservan su estructura original y las siguientes ramas heredarán `legacy/`. La documentación por módulo es material de capacitación, no una copia de la aplicación.
+* **Módulos 1 y 2 (`legacy/`):** Abrir [legacy/SistemaFacturacion.Legacy.slnx](legacy/SistemaFacturacion.Legacy.slnx). Guías en [legacy/docs/modulo-1/README.md](legacy/docs/modulo-1/README.md) y [legacy/docs/modulo-2/README.md](legacy/docs/modulo-2/README.md).
+* **Clases 4, 5 y 6 (`Sistema-facturacion/`):** Migración técnica inicial a .NET 10 (EF Core, gRPC, BackgroundService, Identity/JWT). Sirve como punto de comparación en la Clase 7 para mostrar por qué una migración técnica 1:1 necesita luego un refactor arquitectónico.

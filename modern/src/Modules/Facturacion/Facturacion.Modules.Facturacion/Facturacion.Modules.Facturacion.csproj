@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Módulo Facturación.
+    REGLA DE MONOLITO MODULAR: observa las referencias de proyecto.
+    Sólo referencia Facturacion.Modules.Clientes.Contracts y Facturacion.Modules.Productos.Contracts.
+    NO referencia Facturacion.Modules.Clientes ni Facturacion.Modules.Productos.
+    Por compilador, Facturación no puede tocar las entidades ni los DbContext de Clientes o Productos.
+  -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Facturacion.BuildingBlocks\Facturacion.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Facturacion.BuildingBlocks.Infrastructure\Facturacion.BuildingBlocks.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Clientes\Facturacion.Modules.Clientes.Contracts\Facturacion.Modules.Clientes.Contracts.csproj" />
+    <ProjectReference Include="..\..\Productos\Facturacion.Modules.Productos.Contracts\Facturacion.Modules.Productos.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Facturacion.Tests" />
+  </ItemGroup>
+</Project>
+

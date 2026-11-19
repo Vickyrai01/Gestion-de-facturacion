@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Contrato público del módulo Clientes.
+    Es el ÚNICO ensamblado del módulo que otros módulos (por ejemplo, Facturación)
+    tienen permitido referenciar. No expone entidades de dominio ni DbContext.
+  -->
+</Project>
+

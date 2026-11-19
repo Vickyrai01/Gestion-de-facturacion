@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BuildingBlocks\Facturacion.BuildingBlocks\Facturacion.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\src\BuildingBlocks\Facturacion.BuildingBlocks.Infrastructure\Facturacion.BuildingBlocks.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Clientes\Facturacion.Modules.Clientes.Contracts\Facturacion.Modules.Clientes.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Clientes\Facturacion.Modules.Clientes\Facturacion.Modules.Clientes.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Productos\Facturacion.Modules.Productos.Contracts\Facturacion.Modules.Productos.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Productos\Facturacion.Modules.Productos\Facturacion.Modules.Productos.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Facturacion\Facturacion.Modules.Facturacion\Facturacion.Modules.Facturacion.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Usuarios\Facturacion.Modules.Usuarios\Facturacion.Modules.Usuarios.csproj" />
+    <ProjectReference Include="..\..\src\Facturacion.Api\Facturacion.Api.csproj" />
+  </ItemGroup>
+</Project>
+

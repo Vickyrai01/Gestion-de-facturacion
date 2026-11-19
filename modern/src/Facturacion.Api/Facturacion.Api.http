@@ -1,0 +1,46 @@
+@Host = http://localhost:5246
+
+### 1. Estado del sistema y arquitectura
+GET {{Host}}/
+Accept: application/json
+
+### 2. Login como ADMIN (usuario demo pre-cargado)
+# @name loginAdmin
+POST {{Host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "admin",
+  "password": "FACTURACION_ADMIN_PASSWORD"
+}
+
+### 3. Consultar clientes (módulo Clientes)
+@Token = {{loginAdmin.response.body.token}}
+GET {{Host}}/api/clientes
+Authorization: Bearer {{Token}}
+
+### 4. Consultar productos activos (módulo Productos)
+GET {{Host}}/api/productos/activos
+Authorization: Bearer {{Token}}
+
+### 5. Crear una factura nueva (módulo Facturación coordinando con Clientes.Contracts y Productos.Contracts)
+POST {{Host}}/api/facturas
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "detalles": [
+    { "productoId": 1, "cantidad": 2 },
+    { "productoId": 2, "cantidad": 1 }
+  ]
+}
+
+### 6. Emitir la factura creada
+POST {{Host}}/api/facturas/4/emitir
+Authorization: Bearer {{Token}}
+
+### 7. Reporte por estado (sólo ADMIN)
+GET {{Host}}/api/facturas/reportes
+Authorization: Bearer {{Token}}
+

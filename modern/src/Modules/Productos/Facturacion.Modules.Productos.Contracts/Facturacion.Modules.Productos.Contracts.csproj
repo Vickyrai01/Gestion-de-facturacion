@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Contrato público del módulo Productos.
+    Único proyecto del módulo Productos que Facturación puede referenciar.
+  -->
+</Project>
+

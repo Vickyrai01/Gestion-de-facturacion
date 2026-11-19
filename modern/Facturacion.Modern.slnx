@@ -1,8 +1,29 @@
 <Solution>
-	<Folder Name="/src/">
-	<Project Path="Facturacion.Modern.Domain/Facturacion.Modern.Domain.csproj" />
-	<Project Path="Facturacion.Modern.Application/Facturacion.Modern.Application.csproj" />
-	<Project Path="Facturacion.Modern.Infrastructure/Facturacion.Modern.Infrastructure.csproj" />
-	<Project Path="Facturacion.Modern.Api/Facturacion.Modern.Api.csproj" />
+  <Folder Name="/src/" />
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/Facturacion.BuildingBlocks/Facturacion.BuildingBlocks.csproj" />
+    <Project Path="src/BuildingBlocks/Facturacion.BuildingBlocks.Infrastructure/Facturacion.BuildingBlocks.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Clientes/">
+    <Project Path="src/Modules/Clientes/Facturacion.Modules.Clientes.Contracts/Facturacion.Modules.Clientes.Contracts.csproj" />
+    <Project Path="src/Modules/Clientes/Facturacion.Modules.Clientes/Facturacion.Modules.Clientes.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Productos/">
+    <Project Path="src/Modules/Productos/Facturacion.Modules.Productos.Contracts/Facturacion.Modules.Productos.Contracts.csproj" />
+    <Project Path="src/Modules/Productos/Facturacion.Modules.Productos/Facturacion.Modules.Productos.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Facturacion/">
+    <Project Path="src/Modules/Facturacion/Facturacion.Modules.Facturacion/Facturacion.Modules.Facturacion.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Usuarios/">
+    <Project Path="src/Modules/Usuarios/Facturacion.Modules.Usuarios/Facturacion.Modules.Usuarios.csproj" />
+  </Folder>
+  <Folder Name="/src/Host/">
+    <Project Path="src/Facturacion.Api/Facturacion.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Facturacion.Tests/Facturacion.Tests.csproj" />
   </Folder>
 </Solution>
+

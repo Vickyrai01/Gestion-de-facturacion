@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Kernel compartido: tipos mínimos que usan todos los módulos.
+    REGLA: no referencia NINGÚN paquete externo ni framework (ni EF Core, ni ASP.NET).
+    Si algo necesita infraestructura, va a Facturacion.BuildingBlocks.Infrastructure.
+  -->
+</Project>
+

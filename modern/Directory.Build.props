@@ -1,0 +1,16 @@
+<Project>
+  <!--
+    Configuración común a TODOS los proyectos de modern/.
+    Evita repetir TargetFramework, Nullable, etc. en cada .csproj
+    y garantiza que todo el monolito modular compile igual.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>
+
